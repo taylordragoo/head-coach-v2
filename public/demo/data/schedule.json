@@ -1,0 +1,52 @@
+{
+  "Schedule": [
+    {
+      "Week": "1-2",
+      "Description": "Offseason - Teams form and practice"
+    },
+    {
+      "Week": "3-6",
+      "Description": "Preseason Scrimmages"
+    },
+    {
+      "Week": "7",
+      "Description": "Start of Spring Split"
+    },
+    {
+      "Week": "8-17",
+      "Description": "Spring Split Regular Season"
+    },
+    {
+      "Week": "18",
+      "Description": "Mid-Season Invitational (MSI)"
+    },
+    {
+      "Week": "19-20",
+      "Description": "Break - Teams form and practice"
+    },
+    {
+      "Week": "21",
+      "Description": "Start of Summer Split"
+    },
+    {
+      "Week": "22-31",
+      "Description": "Summer Split Regular Season"
+    },
+    {
+      "Week": "32-35",
+      "Description": "Playoffs"
+    },
+    {
+      "Week": "36-37",
+      "Description": "Break before Worlds"
+    },
+    {
+      "Week": "38-42",
+      "Description": "World Championship"
+    },
+    {
+      "Week": "43-52",
+      "Description": "Offseason"
+    }
+  ]
+}

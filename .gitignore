@@ -1,0 +1,16 @@
+build
+dist
+node_modules
+.DS_Store
+sassdoc
+.sass-cache
+
+/idea
+/.idea
+
+package-lock.json
+
+# sass
+layout.css
+.sass-cache
+theme-*.map
