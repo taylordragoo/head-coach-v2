@@ -92,6 +92,7 @@ import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
 import {StoreController} from "./controllers";
+import DatabaseController from "./controllers/DatabaseController";
 
 const app = createApp(App);
 
@@ -188,8 +189,9 @@ app.component('TriStateCheckbox', TriStateCheckbox);
 
 app.component('BlockViewer', BlockViewer);
 
-const storeController = new StoreController()
-const store = storeController.create()
+const databaseController = DatabaseController.getInstance();
+const storeController = StoreController.getInstance();
+const store = storeController.getStore()
 app.use(store);
 console.log(store)
 

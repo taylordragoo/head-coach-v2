@@ -162,11 +162,7 @@ import {
 import Champion from '@/models/Champion';
 import Synergy from '@/models/Synergy';
 import Counter from '@/models/Counter';
-// import Attributes from '@/models/Attributes';
-// import Born from '@/models/Born';
-// import Contract from '@/models/Contract';
-// import Salaries from '@/models/Salaries';
-// import Stats from '@/models/Stats';
+import DatabaseController from "../../controllers/DatabaseController";
 
 export default {
     data() {
@@ -214,11 +210,11 @@ export default {
         this.teamController = new TeamController()
         this.careerController = new CareerController()
         this.worldController = new WorldController()
+        this.databaseController = DatabaseController.getInstance()
     },
     mounted() {
         this.$store.dispatch('resetState')
         this.checkForData()
-        // this.teams = this.teamController.read()
     },
     watch: {
         value1() {
@@ -230,322 +226,134 @@ export default {
         }
     },
     methods: {
-        closeApp() {
-            console.log("Close App")
-            window.ipcRenderer.send('quit-app');
-        },
-        openNew() {
-            this.coach = {};
-            this.submitted = false;
-            this.coachDialog = true;
-        },
-        openContinue() {
-            this.coach = {};
+      async checkForData() {
+        const obj = this
+        const db = this.databaseController;
+        await db.initDefaultDatabase();
 
-            this.submitted = false;
-            this.continueDialog = true;
-        },
-        hideDialog() {
-            console.log("Hide Dialog")
-            this.coachDialog = false;
-            this.continueDialog = false;
-            this.loadingDialog = false;
-            this.submitted = false;
+        // obj.databases = db.getAllDatabases();
+        // console.log(databases);
+        // const index = obj.databases.indexOf('default')
+        // obj.databases.splice(index,1)
+      },
+      async loadSelectedCareer(name) {
+          let obj = this
+          let db_name = name;
+          obj.loading = true
+          obj.restartTimer();
 
-            if(this.loading) {
-                console.log("Loading")
-                this.$router.push('/')
-                this.loading = false
-            }
+          console.log("DB: " + db_name)
+          const db = new Dexie(db_name);
 
-            if(this.creating) {
-                console.log("Creating")
-                this.$router.push('/')
-                this.creating = false
-            }
+          if (!(await Dexie.exists(db.name))) {
+              console.log("Db does not exist");
+          } else {
+              // open database
+              await db.open()
 
-            if(this.deleting) {
-                console.log("Deleting")
-                this.$router.push('/')
-                this.deleting = false
-            }
-        },
-        async checkForData() {
-            console.log("Initializing database....")
-            let obj = this
+              // get data from indexeddb via dexie
+              const team = await db.table('teams').toArray();
+              const player = await db.table('players').toArray();
+              const user = await db.table('user').toArray();
+              const world = await db.table('world').toArray();
+              const league = await db.table('leagues').toArray();
+              const champs = await db.table('champions').toArray();
+              const counters = await db.table('counters').toArray();
+              const synergys = await db.table('synergys').toArray();
 
-            const db = new Dexie('default');
+              // insert data into vuex-orm store
+              await Team.insert({ data: team })
+              await User.insert({ data: user })
+              await Player.insert({ data: player })
+              await League.insert({ data: league })
+              await World.insert({ data: world })
+              await Champion.insert({ data: champs })
+              await Counter.insert({ data: counters })
+              await Synergy.insert({ data: synergys })
+          }
 
-            if (!(await Dexie.exists(db.name))) {
-                console.log("Db does not exist");
-                this.initDefaultDatabase()
-            } else {
-                console.log("Default db does exist")
+      },
+      createNewCareer() {
+        let obj = this
+        obj.coachDialog = false
+        obj.loadingDialog = true;
+        obj.creating = true
+        obj.restartTimer();
+        setTimeout(() => {
+          // obj.initNewCareerData()
+          // this.careerController.createNewCareer();
+        }, 2000);
+      },
+      closeApp() {
+        console.log("Close App")
+        window.ipcRenderer.send('quit-app');
+      },
+      openNew() {
+        this.coach = {};
+        this.submitted = false;
+        this.coachDialog = true;
+      },
+      openContinue() {
+        this.coach = {};
 
-                await db.open().catch (function (err) {
-                    console.error('Failed to open db: ' + (err.stack || err));
-                }).finally(function() {
-                    console.log(db.tables);
-                });
+        this.submitted = false;
+        this.continueDialog = true;
+      },
+      hideDialog() {
+        console.log("Hide Dialog")
+        this.coachDialog = false;
+        this.continueDialog = false;
+        this.loadingDialog = false;
+        this.submitted = false;
 
-                obj.teams = await db.table('teams').toArray();
-            }
-
-            // get existing databases
-            obj.databases = await Dexie.getDatabaseNames();
-            let index = obj.databases.indexOf('default')
-            obj.databases.splice(index,1)
-        },
-        createNewCareer() {
-            let obj = this
-            obj.coachDialog = false
-            obj.loadingDialog = true;
-            obj.creating = true
-            obj.restartTimer();
-            setTimeout(() => {
-                obj.initNewCareerData()
-            }, 2000);
-        },
-        initDefaultDatabase() {
-            console.log("Seeding default database....")
-            let obj = this
-            try {
-                this.worldController.create()
-            } catch (error) {
-                console.error('' + error);
-            } finally {
-                let db_name = 'default'
-
-                const teams = Team.all().map(team => {
-                    return {
-                        ...team,
-                        budget: {
-                            scouting: { ...team.budget.scouting },
-                            coaching: { ...team.budget.coaching },
-                            health: { ...team.budget.health },
-                            facilities: { ...team.budget.facilities },
-                        },
-                        coach: { ...team.coach },
-                    };
-                });
-
-                const players = Player.all().map(player => {
-                    return {
-                        ...player,
-                        born: { ...player.born },
-                        injury: { ...player.injury },
-                        contract: { ...player.contract },
-                        ratings: player.ratings.map(rating => ({ ...rating })),
-                        champions: [...player.champions],
-                        championsRnk: { ...player.championsRnk },
-                        awards: [...player.awards],
-                        salaries: [...player.salaries],
-                        statsTids: Array.from(player.statsTids),
-                        languages: Array.from(player.languages)
-                    };
-                });
-
-                let request = {
-                    type: "default",
-                    db_name: 'default',
-                    world: World.query().first().$toJson(),
-                    players: players,
-                    teams: teams,
-                    leagues: League.all(),
-                    counters: Counter.all(),
-                    synergys: Synergy.all(),
-                    champions: Champion.all()
-                }
-
-                console.log(request.leagues.length);
-
-                // Call function that inits database and returns database
-                this.careerController.create(request);
-            }
-        },
-        async initNewCareerData() {
-            console.log("Seeding database...")
-            let obj = this
-
-            let create_user = {
-                id: 0,
-                first: obj.first_name,
-                last: obj.last_name,
-                age: obj.age,
-                exp: obj.exp.label,
-                skill: obj.skill,
-                team_id: this.team.id
-            }
-
-            this.userController.create(create_user)
-
-            if(obj.databases.length < 3) {
-                try {
-
-                    const db = new Dexie('default');
-
-                    if (!(await Dexie.exists(db.name))) {
-                        console.log("Db does not exist");
-                    } else {
-                        console.log("Default db does exist")
-                        await db.open().catch (function (err) {
-                            console.error('Failed to open db: ' + (err.stack || err));
-                        }).finally(function() {
-                            console.log(db.tables);
-                        });
-
-                        const player = await db.table('players').toArray();
-                        const team = await db.table('teams').toArray();
-                        const world = await db.table('world').toArray();
-                        const league = await db.table('leagues').toArray();
-                        const champs = await db.table('champions').toArray();
-                        const counters = await db.table('counters').toArray();
-                        const synergys = await db.table('synergys').toArray();
-
-                        await Team.insert({ data: team })
-                        await Player.insert({ data: player })
-                        await League.insert({ data: league })
-                        await World.insert({ data: world })
-                        await Champion.insert({ data: champs })
-                        await Counter.insert({ data: counters })
-                        await Synergy.insert({ data: synergys })
-
-                        db.close()
-
-                        const teams = Team.all().map(team => {
-                            return {
-                                ...team,
-                                budget: {
-                                    scouting: { ...team.budget.scouting },
-                                    coaching: { ...team.budget.coaching },
-                                    health: { ...team.budget.health },
-                                    facilities: { ...team.budget.facilities },
-                                },
-                                coach: { ...team.coach },
-                            };
-                        });
-
-                        const players = Player.all().map(player => {
-                            return {
-                                ...player,
-                                born: { ...player.born },
-                                injury: { ...player.injury },
-                                contract: { ...player.contract },
-                                ratings: player.ratings.map(rating => ({ ...rating })),
-                                champions: [...player.champions],
-                                championsRnk: { ...player.championsRnk },
-                                awards: [...player.awards],
-                                salaries: [...player.salaries],
-                                statsTids: Array.from(player.statsTids),
-                                languages: Array.from(player.languages)
-                            };
-                        });
-
-                        const request = {
-                            type: "new",
-                            db: create_user.first + " " + create_user.last,
-                            user: User.query().first().$toJson(),
-                            world: World.query().first().$toJson(),
-                            players: players,
-                            teams: teams,
-                            leagues: League.all(),
-                            counters: Counter.all(),
-                            synergys: Synergy.all(),
-                            champions: Champion.all(),
-                        }
-                        console.log(request);
-
-                        this.careerController.create(request);
-                    }
-
-                } catch (error) {
-                    console.error('' + error);
-                } finally {
-                    console.log("Done")
-                }
-            } else {
-                console.log('too many saves')
-            }
-        },
-        async loadSelectedCareer(name) {
-            let obj = this
-            let db_name = name;
-            obj.loading = true
-            obj.restartTimer();
-
-            console.log("DB: " + db_name)
-            const db = new Dexie(db_name);
-
-            if (!(await Dexie.exists(db.name))) {
-                console.log("Db does not exist");
-            } else {
-                // open database
-                await db.open()
-
-                // get data from indexeddb via dexie
-                const team = await db.table('teams').toArray();
-                const player = await db.table('players').toArray();
-                const user = await db.table('user').toArray();
-                const world = await db.table('world').toArray();
-                const league = await db.table('leagues').toArray();
-                const champs = await db.table('champions').toArray();
-                const counters = await db.table('counters').toArray();
-                const synergys = await db.table('synergys').toArray();
-
-                // const attr = await db.table('attributes').toArray();
-                // const born = await db.table('born').toArray();
-                // const contract = await db.table('contract').toArray();
-                // const salaries = await db.table('salaries').toArray();
-                // const stats = await db.table('stats').toArray();
-
-                // insert data into vuex-orm store
-                await Team.insert({ data: team })
-                await User.insert({ data: user })
-                await Player.insert({ data: player })
-                await League.insert({ data: league })
-                await World.insert({ data: world })
-                await Champion.insert({ data: champs })
-                await Counter.insert({ data: counters })
-                await Synergy.insert({ data: synergys })
-
-                // await Attributes.insert( { data: attr })
-                // await Born.insert( { data: born })
-                // await Contract.insert( { data: contract })
-                // await Salaries.insert( { data: salaries })
-                // await Stats.insert( { data: stats })
-            }
-
-        },
-        restartTimer() {
-            clearInterval(this.interval);
-            this.value1 = 0;
-            setTimeout(() => {
-                this.startProgress();
-            }, 100);
-        },
-        startProgress() {
-            this.continueDialog = false
-            this.coachDialog = false
-            this.loadingDialog = true
-            this.interval = setInterval(() => {
-                let newValue = this.value1 + Math.floor(Math.random() * 10) + 1;
-                this.value1 = newValue;
-                console.log(this.value1);
-            }, 500);
-        },
-        endProgress() {
-            clearInterval(this.interval);
-            this.interval = null;
-            setTimeout(() => {
-                this.hideDialog()
-            }, 500);
-        },
-        deleteSelectedCareer(db) {
-            let obj = this
-            obj.deleting = true
-            obj.restartTimer();
-            this.careerController.delete(db);
+        if(this.loading) {
+          console.log("Loading")
+          this.$router.push('/')
+          this.loading = false
         }
+
+        if(this.creating) {
+          console.log("Creating")
+          this.$router.push('/')
+          this.creating = false
+        }
+
+        if(this.deleting) {
+          console.log("Deleting")
+          this.$router.push('/')
+          this.deleting = false
+        }
+      },
+      restartTimer() {
+          clearInterval(this.interval);
+          this.value1 = 0;
+          setTimeout(() => {
+              this.startProgress();
+          }, 100);
+      },
+      startProgress() {
+          this.continueDialog = false
+          this.coachDialog = false
+          this.loadingDialog = true
+          this.interval = setInterval(() => {
+              let newValue = this.value1 + Math.floor(Math.random() * 10) + 1;
+              this.value1 = newValue;
+              console.log(this.value1);
+          }, 500);
+      },
+      endProgress() {
+          clearInterval(this.interval);
+          this.interval = null;
+          setTimeout(() => {
+              this.hideDialog()
+          }, 500);
+      },
+      deleteSelectedCareer(db) {
+          let obj = this
+          obj.deleting = true
+          obj.restartTimer();
+          this.careerController.delete(db);
+      }
     }
 }
 </script>
