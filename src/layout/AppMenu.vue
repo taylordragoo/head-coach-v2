@@ -9,7 +9,7 @@ const model = ref([
             {
                 label: 'E-Commerce',
                 icon: 'pi pi-fw pi-home',
-                to: '/',
+                to: '/home',
             },
             {
                 label: 'Banking',

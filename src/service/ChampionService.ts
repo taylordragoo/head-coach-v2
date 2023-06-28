@@ -4,6 +4,18 @@ import Counter from '@/models/Counter';
 
 export default class ChampionService {
 
+    private static instance: ChampionService;
+
+    private constructor() {}
+
+    public static getInstance(): ChampionService {
+        if (!ChampionService.instance) {
+            ChampionService.instance = new ChampionService();
+        }
+
+        return ChampionService.instance;
+    }
+
     handleCreateDefaultChampions()
     {
         console.log("Handling Champs")

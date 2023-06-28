@@ -1,5 +1,4 @@
 import { CareerService } from '@/service/index';
-import World from '@/models/World'
 
 class CareerController {
     private static instance: CareerController;
@@ -19,12 +18,7 @@ class CareerController {
 
     public createDefaultData: any = () => {
         this.careerService.handleCreateDefaultWorld();
-
-        const data = {
-            type: "default",
-            db_name: 'default',
-            world: World.query().first().$toJson(),
-        }
+        const data = this.careerService.handleGetDefaultData();
 
         return data;
     }

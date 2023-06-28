@@ -2,11 +2,11 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
 const routes = [
     {
-        path: '/',
+        path: '/home',
         component: AppLayout,
         children: [
             {
-                path: '/',
+                path: '/home',
                 name: 'e-commerce',
                 meta: {
                     breadcrumb: ['E-COMMERCE DASHBOARD'],
@@ -406,7 +406,7 @@ const routes = [
         ],
     },
     {
-        path: '/main-menu',
+        path: '/',
         name: 'main-menu',
         component: () => import('@/views/pages/MainMenu.vue'),
     },

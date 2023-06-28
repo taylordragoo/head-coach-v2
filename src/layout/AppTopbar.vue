@@ -297,7 +297,7 @@
       },
       hideDialog() {
         if(this.exiting) {
-          this.$router.push('/main-menu')
+          this.$router.push('/')
           this.exiting = false
           this.exitDialog = false;
         } else if(this.continuing) {

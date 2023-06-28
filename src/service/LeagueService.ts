@@ -1,8 +1,19 @@
 import League from '@/models/League';
 
 export default class LeagueService {
+    private static instance: LeagueService;
 
-    handleCreateNewLeagues()
+    constructor() {}
+
+    public static getInstance(): LeagueService {
+        if (!LeagueService.instance) {
+            LeagueService.instance = new LeagueService();
+        }
+
+        return LeagueService.instance;
+    }
+
+    handleCreateDefaultLeagues()
     {
         League.insert({
             data: [

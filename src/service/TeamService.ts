@@ -2,6 +2,17 @@ import Team from '@/models/Team';
 import faker from 'faker';
 
 export default class TeamService {
+    private static instance: TeamService;
+
+    constructor() {}
+
+    public static getInstance(): TeamService {
+        if (!TeamService.instance) {
+            TeamService.instance = new TeamService();
+        }
+
+        return TeamService.instance;
+    }
 
     handleCreateNewTeam(lid, tid)
     {

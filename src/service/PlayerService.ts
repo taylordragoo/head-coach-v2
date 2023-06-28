@@ -2,6 +2,17 @@ import Player from '@/models/Player';
 import faker from 'faker';
 
 export default class PlayerService {
+    private static instance: PlayerService;
+
+    constructor() {}
+
+    public static getInstance(): PlayerService {
+        if (!PlayerService.instance) {
+            PlayerService.instance = new PlayerService();
+        }
+
+        return PlayerService.instance;
+    }
 
     handleCreatePlayers(tid) {
         const p = this.handleGeneratePlayer(tid)

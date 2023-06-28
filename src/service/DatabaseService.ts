@@ -8,9 +8,9 @@ class DatabaseService {
     public db_name: string;
     public careerController: CareerController;
 
-    private constructor() {
+    private constructor(name: string = 'default') {
         this.careerController = CareerController.getInstance();
-        this.dbTemplate = new Dexie("default");
+        this.dbTemplate = new Dexie(name);
     }
 
     public static getInstance(name: string): DatabaseService {
@@ -52,7 +52,14 @@ class DatabaseService {
 
     async initDB(db) {
         db.version(1).stores({
-            world: "id"
+            user: "id",
+            teams: "id",
+            players: "id",
+            world: 'id',
+            leagues: "id",
+            champions: "$id",
+            counters: "id",
+            synergys: "id",
         });
         await db.open().catch((error) => {
             console.error("Failed to open db: ", error);
@@ -72,6 +79,61 @@ class DatabaseService {
             // additions commit despite that there were errors.
             console.error("Some worlds did not succeed. However, " +
                 100000 - e.failures.length + " worlds was added successfully");
+        });
+
+        this.dbTemplate.champions.bulkPut(request.champions).then(function(lastKey) {
+            console.log("Last champion id was: " + lastKey); // Will be 100000.
+        }).catch(Dexie.BulkError, function(e) {
+            // Explicitely catching the bulkAdd() operation makes those successful
+            // additions commit despite that there were errors.
+            console.error("Some teams did not succeed. However, " +
+                100000 - e.failures.length + " teams was added successfully");
+        });
+
+        this.dbTemplate.leagues.bulkPut(request.leagues).then(function(lastKey) {
+            console.log("Last leagues's id was: " + lastKey); // Will be 100000.
+        }).catch(Dexie.BulkError, function(e) {
+            // Explicitely catching the bulkAdd() operation makes those successful
+            // additions commit despite that there were errors.
+            console.error("Some leagues did not succeed. However, " +
+                100000 - e.failures.length + " leagues was added successfully");
+        });
+
+        this.dbTemplate.counters.bulkPut(request.counters).then(function(lastKey) {
+            console.log("Last counter id was: " + lastKey); // Will be 100000.
+        }).catch(Dexie.BulkError, function(e) {
+            // Explicitely catching the bulkAdd() operation makes those successful
+            // additions commit despite that there were errors.
+            console.error("Some teams did not succeed. However, " +
+                100000 - e.failures.length + " teams was added successfully");
+        });
+
+        this.dbTemplate.synergys.bulkPut(request.synergys).then(function(lastKey) {
+            console.log("Last synergy id was: " + lastKey); // Will be 100000.
+        }).catch(Dexie.BulkError, function(e) {
+            // Explicitely catching the bulkAdd() operation makes those successful
+            // additions commit despite that there were errors.
+            console.error("Some teams did not succeed. However, " +
+                100000 - e.failures.length + " teams was added successfully");
+        });
+
+        console.log(request.players[0])
+        this.dbTemplate.players.bulkPut(request.players).then(function(lastKey) {
+            console.log("Last player's id was: " + lastKey); // Will be 100000.
+        }).catch(Dexie.BulkError, function(e) {
+            // Explicitely catching the bulkAdd() operation makes those successful
+            // additions commit despite that there were errors.
+            console.error("Some players did not succeed. However, " +
+                100000 - e.failures.length + " players was added successfully");
+        });
+
+        this.dbTemplate.teams.bulkPut(request.teams).then(function(lastKey) {
+            console.log("Last teams's id was: " + lastKey); // Will be 100000.
+        }).catch(Dexie.BulkError, function(e) {
+            // Explicitely catching the bulkAdd() operation makes those successful
+            // additions commit despite that there were errors.
+            console.error("Some teams did not succeed. However, " +
+                100000 - e.failures.length + " teams was added successfully");
         });
     }
 

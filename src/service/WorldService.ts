@@ -1,9 +1,16 @@
 import World from '@/models/World';
+import ChampionController from "@/controllers/ChampionController";
+import LeagueController from "@/controllers/LeagueController";
 
 export default class WorldService {
     private static instance: WorldService;
+    private championController: ChampionController;
+    private leagueController: LeagueController;
 
-    private constructor() {}
+    private constructor() {
+        this.championController = ChampionController.getInstance();
+        this.leagueController = LeagueController.getInstance();
+    }
 
     public static getInstance(): WorldService {
         if (!WorldService.instance) {
@@ -24,6 +31,9 @@ export default class WorldService {
             }
         })
 
-        return World.query().first().$toJson();
+        this.championController.createDefaultChampions();
+        this.leagueController.createDefaultLeagues();
+
+        return;
     }
 }
