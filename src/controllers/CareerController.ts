@@ -1,4 +1,5 @@
 import { CareerService } from '@/service/index';
+import DatabaseController from "@/controllers/DatabaseController";
 
 class CareerController {
     private static instance: CareerController;
@@ -18,13 +19,23 @@ class CareerController {
 
     public createDefaultData: any = () => {
         this.careerService.handleCreateDefaultWorld();
-        const data = this.careerService.handleGetDefaultData();
+        return this.careerService.handleGetDefaultData();
+    }
 
-        return data;
+    public loadSelectedCareer: any = (name: string) => {
+        return this.careerService.handleLoadSelectedCareer(name);
+    }
+
+    public insertVuexData: any = (request) => {
+        this.careerService.handleInsertVuexData(request);
     }
 
     public createNewCareer: any = (request) => {
         this.careerService.handleCreateNewWorld(request);
+    }
+
+    public saveCareer: any = () => {
+        this.careerService.handleSaveCareer();
     }
 }
 

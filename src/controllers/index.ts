@@ -6,6 +6,7 @@ import PlayerController from '@/controllers/PlayerController';
 import StoreController from '@/controllers/StoreController';
 import CareerController from '@/controllers/CareerController';
 import ChampionController from '@/controllers/ChampionController';
+import DatabaseController from "@/controllers/DatabaseController";
 
 export {
     UserController,
@@ -15,5 +16,6 @@ export {
     PlayerController,
     StoreController,
     CareerController,
-    ChampionController
+    ChampionController,
+    DatabaseController
 }

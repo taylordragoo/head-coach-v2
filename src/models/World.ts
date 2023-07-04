@@ -1,5 +1,6 @@
 import { Model } from '@vuex-orm/core'
 import League from '@/models/League';
+import moment from 'moment';
 
 export default class World extends Model {
     static entity = 'world'
@@ -11,5 +12,10 @@ export default class World extends Model {
             user_id: this.attr(null),
             leagues: this.hasMany(League, 'wid'),
         }
+    }
+
+    get currentWeek() {
+        // Use moment.js to get the week of the year. By default, weeks start on Sunday.
+        return moment(this.date).week();
     }
 }

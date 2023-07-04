@@ -1,5 +1,6 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import {createRouter, createWebHashHistory, Router} from 'vue-router';
 import AppLayout from '@/layout/AppLayout.vue';
+
 const routes = [
     {
         path: '/home',
@@ -463,7 +464,7 @@ const routes = [
     },
 ];
 
-const router = createRouter({
+const router: Router = createRouter({
     history: createWebHashHistory(),
     routes,
     scrollBehavior() {

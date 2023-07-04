@@ -1,6 +1,3 @@
-const number = 0;
-const string = ''
-
 export const DIFFICULTY = {
     Easy: -0.25,
     Normal: 0,
@@ -8,37 +5,93 @@ export const DIFFICULTY = {
     Insane: 1,
 };
 
-export const PHASE = {
-    PRESEASON: 0,
-    REGULAR_SEASON: 1,
-    AFTER_TRADE_DEADLINE: 2,
-    PLAYOFFS: 3,
-    BEFORE_DRAFT: 4,
-    DRAFT: 5,
-    AFTER_DRAFT: 6,
-    RESIGN_PLAYERS: 7,
-    FREE_AGENCY: 8,
+export type PHASE = {
+    name: string;
+    startWeek: number;
+    endWeek: number;
 };
 
-export const PHASE_TEXT = {
-    0: "Preseason",
-    1: "Regular Season",
-    2: "Post-Trade Deadline",
-    3: "Playoffs",
-    4: "Before Draft",
-    5: "Draft",
-    6: "After Draft",
-    7: "Re-sign Players",
-    8: "Free Agency",
+export const DEFAULT_PHASE: {
+        PRESEASON: number;
+        SPRING_SEASON: number;
+        SPRING_PLAYOFFS: number;
+        MID_SEASON_INVITATIONAL: number;
+        SUMMER_SEASON: number;
+        SUMMER_PLAYOFFS: number;
+        REGIONAL_FINALS: number;
+        WORLD_CHAMPIONSHIP: number;
+        OFFSEASON: number;
+    } = {
+        PRESEASON: 0,
+        SPRING_SEASON: 1,
+        SPRING_PLAYOFFS: 2,
+        MID_SEASON_INVITATIONAL: 3,
+        SUMMER_SEASON: 4,
+        SUMMER_PLAYOFFS: 5,
+        REGIONAL_FINALS: 6,
+        WORLD_CHAMPIONSHIP: 7,
+        OFFSEASON: 8,
 };
 
-export const PLAYER_STATE = {
+export const LEC_PHASE: {
+        PRESEASON: number;
+        WINTER_SEASON: number;
+        WINTER_PLAYOFFS: number;
+        SPRING_SEASON: number;
+        SPRING_PLAYOFFS: number;
+        MID_SEASON_INVITATIONAL: number;
+        SUMMER_SEASON: number;
+        SUMMER_PLAYOFFS: number;
+        REGIONAL_FINALS: number;
+        WORLD_CHAMPIONSHIP: number;
+        OFFSEASON: number;
+    } = {
+        PRESEASON: 0,
+        WINTER_SEASON: 1,
+        WINTER_PLAYOFFS: 2,
+        SPRING_SEASON: 3,
+        SPRING_PLAYOFFS: 4,
+        MID_SEASON_INVITATIONAL: 5,
+        SUMMER_SEASON: 6,
+        SUMMER_PLAYOFFS: 7,
+        REGIONAL_FINALS: 8,
+        WORLD_CHAMPIONSHIP: 9,
+        OFFSEASON: 10,
+}
+
+const LEC_SCHEDULE: Phase[] = [
+    { id: 0, name: 'PRESEASON', startWeek: 1, endWeek: 2 },
+    { id: 1, name: 'WINTER_SEASON', startWeek: 3, endWeek: 10 },
+    { id: 2, name: 'WINTER_PLAYOFFS', startWeek: 11, endWeek: 13 },
+    { id: 3, name: 'SPRING_SEASON', startWeek: 14, endWeek: 21 },
+    { id: 4, name: 'SPRING_PLAYOFFS', startWeek: 22, endWeek: 24 },
+    { id: 5, name: 'MID_SEASON_INVITATIONAL', startWeek: 25, endWeek: 27 },
+    { id: 6, name: 'SUMMER_SEASON', startWeek: 28, endWeek: 35 },
+    { id: 7, name: 'SUMMER_PLAYOFFS', startWeek: 36, endWeek: 38 },
+    { id: 8, name: 'REGIONAL_FINALS', startWeek: 39, endWeek: 41 },
+    { id: 9, name: 'WORLD_CHAMPIONSHIP', startWeek: 42, endWeek: 44 },
+    { id: 10, name: 'OFFSEASON', startWeek: 45, endWeek: 52 }
+];
+
+const DEFAULT_SCHEDULE: Phase[] = [
+    { id: 0, name: 'PRESEASON', startWeek: 1, endWeek: 2 },
+    { id: 1, name: 'SPRING_SEASON', startWeek: 3, endWeek: 10 },
+    { id: 2, name: 'SPRING_PLAYOFFS', startWeek: 11, endWeek: 13 },
+    { id: 3, name: 'MID_SEASON_INVITATIONAL', startWeek: 14, endWeek: 16 },
+    { id: 4, name: 'SUMMER_SEASON', startWeek: 17, endWeek: 24 },
+    { id: 5, name: 'SUMMER_PLAYOFFS', startWeek: 25, endWeek: 27 },
+    { id: 6, name: 'REGIONAL_FINALS', startWeek: 28, endWeek: 30 },
+    { id: 7, name: 'WORLD_CHAMPIONSHIP', startWeek: 31, endWeek: 33 },
+    { id: 8, name: 'OFFSEASON', startWeek: 34, endWeek: 52 }
+];
+
+export type PLAYER_STATE = {
     FREE_AGENT: 1,
     RETIRED: 2,
     SIGNED: 3
 };
 
-export const PLAYER_CONTRACT = {
+export type PLAYER_CONTRACT = {
     amountPerYear: number,
     length: number,
     salaries: [],
@@ -46,7 +99,7 @@ export const PLAYER_CONTRACT = {
     playerOption: false
 }
 
-export const PLAYER_SALARY = {
+export type PLAYER_SALARY = {
     amount: number,
     season: number
 }

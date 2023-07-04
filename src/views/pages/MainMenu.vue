@@ -48,120 +48,111 @@
             </div>
         </div>
     </div>
-    <div class="flex h-screen">
-        <Dialog v-model:visible="coachDialog" :style="{width: '800px'}" header="New Coach Details" :modal="true" class="p-fluid">
-            <div class='formgrid grid'>
-                <div class="field col">
-                    <label >First Name</label>
-                    <InputText id="name" v-model='first_name' required="true" autofocus :class="{'p-invalid': submitted && !first_name}" />
-                    <small class="p-invalid" v-if="submitted && !first_name">First Name is required.</small>
-                </div>
-                <div class="field col">
-                    <label>Last Name</label>
-                    <InputText id="name" v-model="last_name" required="true" autofocus :class="{'p-invalid': submitted && !last_name}" />
-                    <small class="p-invalid" v-if="submitted && !last_name">Last Name is required.</small>
-                </div>
+
+    <Dialog v-model:visible="coachDialog" :style="{width: '800px'}" header="New Coach Details" :modal="true" class="p-fluid">
+        <div class='formgrid grid'>
+            <div class="field col">
+                <label >First Name</label>
+                <InputText id="name" v-model='first_name' required="true" autofocus :class="{'p-invalid': submitted && !first_name}" />
+                <small class="p-invalid" v-if="submitted && !first_name">First Name is required.</small>
+            </div>
+            <div class="field col">
+                <label>Last Name</label>
+                <InputText id="name" v-model="last_name" required="true" autofocus :class="{'p-invalid': submitted && !last_name}" />
+                <small class="p-invalid" v-if="submitted && !last_name">Last Name is required.</small>
+            </div>
+        </div>
+
+        <div class="formgrid grid">
+            <div class="field col">
+                <label>Age</label>
+                <InputNumber id="age" v-model="age" required="true" autofocus :class="{'p-invalid': submitted && !age}" />
+                <small class="p-invalid" v-if="submitted && !age">Age is required.</small>
             </div>
 
-            <div class="formgrid grid">
-                <div class="field col">
-                    <label>Age</label>
-                    <InputNumber id="age" v-model="age" required="true" autofocus :class="{'p-invalid': submitted && !age}" />
-                    <small class="p-invalid" v-if="submitted && !age">Age is required.</small>
-                </div>
+            <div class="field col">
+                <label>Playing Experience</label>
+                <Dropdown id="inventoryStatus" v-model='exp' :options="statuses" optionLabel="label" placeholder="Past playing experience...">
+                    <template>
+                        <div>{{statuses.label}}</div>
+                    </template>
+                </Dropdown>
+            </div>
+        </div>
 
-                <div class="field col">
-                    <label>Playing Experience</label>
-                    <Dropdown id="inventoryStatus" v-model='exp' :options="statuses" optionLabel="label" placeholder="Past playing experience...">
-                        <template>
-                            <div>{{statuses.label}}</div>
-                        </template>
-                    </Dropdown>
-                </div>
+        <div class="formgrid grid">
+            <div class="field col">
+                <label>Team Selection</label>
+                <Dropdown id="inventoryStatus" v-model='team' :options="teams" optionLabel="name" placeholder="Select a team..."></Dropdown>
             </div>
 
-            <div class="formgrid grid">
-                <div class="field col">
-                    <label>Team Selection</label>
-                    <Dropdown id="inventoryStatus" v-model='team' :options="teams" optionLabel="name" placeholder="Select a team..."></Dropdown>
-                </div>
-
-                <div class="field col">
-                    <label>Skillset</label>
-                    <Dropdown id="inventoryStatus" v-model='skill' :options="skills" optionLabel="skill" placeholder="Choose your skillset..."></Dropdown>
-                </div>
+            <div class="field col">
+                <label>Skillset</label>
+                <Dropdown id="inventoryStatus" v-model='skill' :options="skills" optionLabel="skill" placeholder="Choose your skillset..."></Dropdown>
             </div>
+        </div>
 
-            <template #footer>
-                <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog"/>
-                <Button label="Create" icon="pi pi-check" class="p-button-text" @click="createNewCareer" />
-            </template>
-        </Dialog>
+        <template #footer>
+            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog"/>
+            <Button label="Create" icon="pi pi-check" class="p-button-text" @click="createNewCareer" />
+        </template>
+    </Dialog>
 
-        <Dialog v-model:visible="continueDialog" :style="{width: '800px'}" header="Continue previous save..." close-icon="false" :modal="true" class="p-fluid bg-white">
-            <div class="row">
-                <div class="col-md-2">
-                </div>
-                <div class="col-md-1" v-for='save in this.databases'>
-                    <div class="p-fluid">
-                        <h5>{{ save }}</h5>
-                        <div class="field grid">
-                            <label class="col-12 mb-2 md:col-2 md:mb-0">Week</label>
-                            <div class="col-12 md:col-10">
-                                <InputText id="name3" type="text" disabled/>
-                            </div>
+    <Dialog v-model:visible="continueDialog" :style="{width: '800px'}" header="Continue previous save..." close-icon="false" :modal="true" class="p-fluid bg-white">
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1" v-for='save in this.databases'>
+                <div class="p-fluid">
+                    <h5>{{ save }}</h5>
+                    <div class="field grid">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0">Week</label>
+                        <div class="col-12 md:col-10">
+                            <InputText id="name3" type="text" disabled/>
                         </div>
-                        <div class="field grid">
-                            <label class="col-12 mb-2 md:col-2 md:mb-0">Year</label>
-                            <div class="col-12 md:col-10">
-                                <InputText id="email3" type="text" disabled/>
-                            </div>
+                    </div>
+                    <div class="field grid">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0">Year</label>
+                        <div class="col-12 md:col-10">
+                            <InputText id="email3" type="text" disabled/>
                         </div>
-                        <div class="field grid">
-                            <label class="col-12 mb-2 md:col-2 md:mb-0"> </label>
-                            <div class="col-12 md:col-8">
-                                <Button type="button" to='/dashboard' @click='loadSelectedCareer(save)' label="Continue Save" class="mb-2" />
-                            </div>
-                            <div class="col-12 md:col-2">
-                                <Button type="button" to='/dashboard' @click='deleteSelectedCareer(save)' label="Delete" class="mb-2 p-button-danger" />
-                            </div>
+                    </div>
+                    <div class="field grid">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0"> </label>
+                        <div class="col-12 md:col-8">
+                            <Button type="button" to='/dashboard' @click='loadSelectedCareer(save)' label="Continue Save" class="mb-2" />
+                        </div>
+                        <div class="col-12 md:col-2">
+                            <Button type="button" to='/dashboard' @click='deleteSelectedCareer(save)' label="Delete" class="mb-2 p-button-danger" />
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                </div>
             </div>
-        </Dialog>
+            <div class="col-md-2">
+            </div>
+        </div>
+    </Dialog>
 
-        <Dialog v-model:visible="loadingDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
-            <div class="justify-content-center">
-                <h5>Loading...</h5>
-                <div class="grid">
-                    <div class="col">
-                        <ProgressBar :value="value1" show-progress variant="success" mode="determinate" :showValue="false"> Percent Complete: {{value1}}% </ProgressBar>
-                    </div>
+    <Dialog v-model:visible="loadingDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
+        <div class="justify-content-center">
+            <h5>Loading...</h5>
+            <div class="grid">
+                <div class="col">
+                    <ProgressBar :value="value1" show-progress variant="success" mode="determinate" :showValue="false"> Percent Complete: {{value1}}% </ProgressBar>
                 </div>
             </div>
-        </Dialog>
-    </div>
+        </div>
+    </Dialog>
 </template>
 
 <script>
 import { Dexie } from 'dexie';
-import User from '@/models/User';
-import Team from '@/models/Team';
-import Player from '@/models/Player';
-import World from '@/models/World';
-import League from '@/models/League';
 import {
     UserController,
     TeamController,
     WorldController,
     CareerController
 }  from '@/controllers/index';
-import Champion from '@/models/Champion';
-import Synergy from '@/models/Synergy';
-import Counter from '@/models/Counter';
 import DatabaseController from "../../controllers/DatabaseController";
 
 export default {
@@ -230,11 +221,12 @@ export default {
         const obj = this
         const db = this.databaseController;
         await db.initDefaultDatabase();
+        this.databases = await db.getAllDatabases();
 
-        // obj.databases = db.getAllDatabases();
-        // console.log(databases);
-        // const index = obj.databases.indexOf('default')
-        // obj.databases.splice(index,1)
+        console.log(this.databases);
+        const index = this.databases.indexOf('default')
+        obj.databases.splice(index,1)
+
       },
       async loadSelectedCareer(name) {
           let obj = this
@@ -243,45 +235,27 @@ export default {
           obj.restartTimer();
 
           console.log("DB: " + db_name)
-          const db = new Dexie(db_name);
-
-          if (!(await Dexie.exists(db.name))) {
-              console.log("Db does not exist");
-          } else {
-              // open database
-              await db.open()
-
-              // get data from indexeddb via dexie
-              const team = await db.table('teams').toArray();
-              const player = await db.table('players').toArray();
-              const user = await db.table('user').toArray();
-              const world = await db.table('world').toArray();
-              const league = await db.table('leagues').toArray();
-              const champs = await db.table('champions').toArray();
-              const counters = await db.table('counters').toArray();
-              const synergys = await db.table('synergys').toArray();
-
-              // insert data into vuex-orm store
-              await Team.insert({ data: team })
-              await User.insert({ data: user })
-              await Player.insert({ data: player })
-              await League.insert({ data: league })
-              await World.insert({ data: world })
-              await Champion.insert({ data: champs })
-              await Counter.insert({ data: counters })
-              await Synergy.insert({ data: synergys })
-          }
-
+          this.careerController.loadSelectedCareer(db_name);
       },
       createNewCareer() {
         let obj = this
         obj.coachDialog = false
         obj.loadingDialog = true;
         obj.creating = true
+
+        let create_user = {
+          id: 0,
+          first: obj.first_name,
+          last: obj.last_name,
+          age: obj.age,
+          exp: obj.exp.label,
+          skill: obj.skill,
+          team_id: 0
+        }
+
         obj.restartTimer();
         setTimeout(() => {
-          // obj.initNewCareerData()
-          // this.careerController.createNewCareer();
+          obj.databaseController.createNewDatabase(create_user)
         }, 2000);
       },
       closeApp() {
@@ -308,13 +282,13 @@ export default {
 
         if(this.loading) {
           console.log("Loading")
-          this.$router.push('/')
+          this.$router.push('/home')
           this.loading = false
         }
 
         if(this.creating) {
           console.log("Creating")
-          this.$router.push('/')
+          this.$router.push('/home')
           this.creating = false
         }
 

@@ -92,9 +92,8 @@ import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
 import {StoreController} from "./controllers";
-import DatabaseController from "./controllers/DatabaseController";
 
-const app = createApp(App);
+const app: App<Element> = createApp(App);
 
 app.use(PrimeVue, { ripple: true });
 app.use(ConfirmationService);
@@ -186,13 +185,10 @@ app.component('Tree', Tree);
 app.component('TreeSelect', TreeSelect);
 app.component('TreeTable', TreeTable);
 app.component('TriStateCheckbox', TriStateCheckbox);
-
 app.component('BlockViewer', BlockViewer);
 
-const databaseController = DatabaseController.getInstance();
-const storeController = StoreController.getInstance();
+const storeController: StoreController = StoreController.getInstance();
 const store = storeController.getStore()
 app.use(store);
-console.log(store)
 
 app.mount('#app');

@@ -36,14 +36,33 @@ class DatabaseController {
         return this.databaseService.initialize();
     }
 
-    public createNewDatabase(databaseName: string) {
-        return this.databaseService.newGame(databaseName);
+    public createNewDatabase(request: any) {
+        return this.databaseService.newGame(request);
     }
 
     public deleteDatabase(databaseName: string) {
         return this.databaseService.handleDeleteCareer(databaseName);
     }
 
+    public saveDatabase() {
+        return this.databaseService.handleSaveCareer();
+    }
+
+    public openDatabase(name: string) {
+        return this.databaseService.handleOpenDatabase(name);
+    }
+
+    public closeDatabase() {
+        this.databaseService.handleCloseDatabase();
+    }
+
+    public getDatabase() {
+        return this.handleGetDatabase();
+    }
+
+    public getCareerDataFromDatabase(db: Dexie) {
+        return this.databaseService.handleGetCareerDataFromDatabase(db);
+    }
 }
 
 export default DatabaseController;

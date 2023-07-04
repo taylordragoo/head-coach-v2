@@ -114,7 +114,7 @@
   import User from "../models/User";
   import Team from "../models/Team";
   import Player from "../models/Player";
-  import {CareerController} from "../controllers";
+  import { CareerController, DatabaseController } from "../controllers";
 
   export default {
     components: {
@@ -125,6 +125,7 @@
       return {
         topbarMenuActive: false,
         items: [],
+        careerController: null,
         loadingDialog: false,
         savingDialog: false,
         exitDialog: false,
@@ -140,7 +141,7 @@
       };
     },
     created() {
-      this.careerController = new CareerController()
+      this.careerController = CareerController.getInstance();
     },
     watch: {
       value1() {
@@ -221,19 +222,8 @@
       },
       onTapbarSaveMenuButtonClick() {
         let obj = this
-
-        let request = {
-          type: "save",
-          db: obj.user.first + ' ' + obj.user.last,
-          user: User.query().first().$toJson(),
-          world: World.query().first().$toJson(),
-          players: Player.all(),
-          teams: Team.all(),
-          leagues: League.all()
-        }
-
         obj.saving = true;
-        this.careerController.update(request);
+        obj.careerController.saveCareer();
         obj.openSave()
       },
       getHumanDate: function(date) {
@@ -339,11 +329,5 @@
         );
       }
     },
-    // mounted() {
-    //   this.bindOutsideClickListener();
-    // },
-    // beforeUnmount() {
-    //   this.unbindOutsideClickListener();
-    // },
   };
 </script>
