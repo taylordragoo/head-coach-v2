@@ -15,6 +15,7 @@ export default class League extends Model {
             teams: this.hasMany(Team, 'lid'),
             phase: this.number(0),
             tier: this.number(0),
+            scheduleType: this.string('')
         }
     }
 }

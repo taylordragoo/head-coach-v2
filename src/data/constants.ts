@@ -59,7 +59,7 @@ export const LEC_PHASE: {
         OFFSEASON: 10,
 }
 
-const LEC_SCHEDULE: Phase[] = [
+export const LEC_SCHEDULE: Phase[] = [
     { id: 0, name: 'PRESEASON', startWeek: 1, endWeek: 2 },
     { id: 1, name: 'WINTER_SEASON', startWeek: 3, endWeek: 10 },
     { id: 2, name: 'WINTER_PLAYOFFS', startWeek: 11, endWeek: 13 },
@@ -73,7 +73,7 @@ const LEC_SCHEDULE: Phase[] = [
     { id: 10, name: 'OFFSEASON', startWeek: 45, endWeek: 52 }
 ];
 
-const DEFAULT_SCHEDULE: Phase[] = [
+export const DEFAULT_SCHEDULE: Phase[] = [
     { id: 0, name: 'PRESEASON', startWeek: 1, endWeek: 2 },
     { id: 1, name: 'SPRING_SEASON', startWeek: 3, endWeek: 10 },
     { id: 2, name: 'SPRING_PLAYOFFS', startWeek: 11, endWeek: 13 },
@@ -104,18 +104,18 @@ export type PLAYER_SALARY = {
     season: number
 }
 
-export const PLAYER_INJURY = {
+export type PLAYER_INJURY = {
     gamesRemaining: number,
     type: string,
     severity: "Minor" | "Major" | "Career Ending"
 }
 
-export const BudgetItem = {
+export type BudgetItem = {
     amount: number,
     rank: number
 }
 
-export const GAME = {
+export type GAME = {
     gid: null,
     homeTeam: {
         tid: number,

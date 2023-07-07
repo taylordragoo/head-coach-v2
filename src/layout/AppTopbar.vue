@@ -2,7 +2,7 @@
     <div class="layout-topbar">
         <div v-if='user != null' class="layout-breadcrumb viewname" style="text-transform: uppercase">
             <template v-if="$route.meta.breadcrumb">
-                <span>{{ $route.name + " | " + user.full_name + " | " + world.date }}</span>
+                <span>{{ $route.name + " | " + user.full_name + " | " + world.currentDayOfWeek + ' ' + world.date }}</span>
             </template>
         </div>
         <div v-else  class="layout-breadcrumb viewname" style="text-transform: uppercase"></div>
@@ -142,6 +142,7 @@
     },
     created() {
       this.careerController = CareerController.getInstance();
+      this.careerController.setPhaseBasedOnWeek();
     },
     watch: {
       value1() {
@@ -213,6 +214,8 @@
       onTopbarContMenuButtonClick(event) {
         let obj = this
         obj.continuing = true;
+        this.continueToTomorrow(this.world.date);
+        this.careerController.continueCareer();
         obj.openContinue();
       },
       onTopbarExitMenuButtonClick(event) {
@@ -291,7 +294,7 @@
           this.exiting = false
           this.exitDialog = false;
         } else if(this.continuing) {
-          this.continueToTomorrow(this.world.date);
+          // this.continueToTomorrow(this.world.date);
           this.continuing = false;
           this.loadingDialog = false;
         } else if(this.saving) {

@@ -8,6 +8,8 @@ import Player from '@/models/Player';
 import Counter from '@/models/Counter';
 import Synergy from '@/models/Synergy';
 import Champion from '@/models/Champion';
+import TrainingSchedule from "@/models/TrainingSchedule";
+import Activity from "@/models/Activity";
 
 class StoreService {
     private static instance: StoreService;
@@ -24,6 +26,8 @@ class StoreService {
         this.database.register(Counter);
         this.database.register(Synergy);
         this.database.register(Champion);
+        this.database.register(TrainingSchedule);
+        this.database.register(Activity);
 
         this.store = new Vuex.Store({
             actions: {

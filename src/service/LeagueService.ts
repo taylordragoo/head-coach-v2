@@ -24,7 +24,8 @@ export default class LeagueService {
                     country: "South Korea",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 2,
@@ -33,7 +34,8 @@ export default class LeagueService {
                     country: "China",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 3,
@@ -42,7 +44,8 @@ export default class LeagueService {
                     country: "Europe, Middle East & Africa",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 4,
@@ -51,7 +54,8 @@ export default class LeagueService {
                     country: "North America",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 5,
@@ -60,7 +64,8 @@ export default class LeagueService {
                     country: "Taiwan, Hong Kong, Macau, & Southeast Asia",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 6,
@@ -69,7 +74,8 @@ export default class LeagueService {
                     country: "Vietnam",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 7,
@@ -78,7 +84,8 @@ export default class LeagueService {
                     country: "Brazil",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 8,
@@ -87,7 +94,8 @@ export default class LeagueService {
                     country: "Japan",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 9,
@@ -96,7 +104,8 @@ export default class LeagueService {
                     country: "Mexico",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 10,
@@ -105,7 +114,8 @@ export default class LeagueService {
                     country: "Australia",
                     wid: 0,
                     phase: 0,
-                    tier: 1
+                    tier: 1,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 11,
@@ -114,7 +124,8 @@ export default class LeagueService {
                     country: "South Korea",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 12,
@@ -123,7 +134,8 @@ export default class LeagueService {
                     country: "North America",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 13,
@@ -132,7 +144,8 @@ export default class LeagueService {
                     country: "China",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 14,
@@ -141,7 +154,8 @@ export default class LeagueService {
                     country: "Europe, Middle East & Africa",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 15,
@@ -150,7 +164,8 @@ export default class LeagueService {
                     country: "Taiwan, Hong Kong, Macau, & Southeast Asia",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 16,
@@ -159,7 +174,8 @@ export default class LeagueService {
                     country: "Vietnam",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 17,
@@ -168,7 +184,8 @@ export default class LeagueService {
                     country: "Brazil",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 18,
@@ -177,7 +194,8 @@ export default class LeagueService {
                     country: "Japan",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 19,
@@ -186,7 +204,8 @@ export default class LeagueService {
                     country: "Mexico",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 20,
@@ -195,7 +214,8 @@ export default class LeagueService {
                     country: "Australia",
                     wid: 0,
                     phase: 0,
-                    tier: 2
+                    tier: 2,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 21,
@@ -204,7 +224,8 @@ export default class LeagueService {
                     country: "France",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 22,
@@ -213,7 +234,8 @@ export default class LeagueService {
                     country: "Turkey",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 23,
@@ -222,7 +244,8 @@ export default class LeagueService {
                     country: "Spain",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 24,
@@ -231,7 +254,8 @@ export default class LeagueService {
                     country: "Germany, Austria, Switzerland",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 25,
@@ -240,7 +264,8 @@ export default class LeagueService {
                     country: "Nordics, UK, Ireland",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 26,
@@ -249,7 +274,8 @@ export default class LeagueService {
                     country: "Poland & Baltics",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 27,
@@ -258,7 +284,8 @@ export default class LeagueService {
                     country: "Portugal",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 28,
@@ -267,7 +294,8 @@ export default class LeagueService {
                     country: "GLL",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 29,
@@ -276,7 +304,8 @@ export default class LeagueService {
                     country: "Italy",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 },
                 {
                     id: 30,
@@ -285,7 +314,8 @@ export default class LeagueService {
                     country: "Middle East & North Africa",
                     wid: 0,
                     phase: 0,
-                    tier: 3
+                    tier: 3,
+                    scheduleType: 'DEFAULT'
                 }
             ]
         })

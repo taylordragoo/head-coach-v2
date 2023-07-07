@@ -9,10 +9,13 @@ import Team from '@/models/Team'
 import League from '@/models/League'
 import User from '@/models/User'
 import {Dexie} from "dexie";
+import Phase from "@/models/Phase";
+import { DEFAULT_SCHEDULE, LEC_SCHEDULE } from "@/data/constants";
+import moment from "moment";
 
 class CareerService {
     private static instance: CareerService;
-    public tableNames = ['user', 'world', 'players', 'teams', 'leagues', 'champions', 'counters', 'synergys'];
+    public tableNames: string[] = ['user', 'world', 'players', 'teams', 'leagues', 'champions', 'counters', 'synergys'];
 
     private constructor() {}
 
@@ -137,6 +140,53 @@ class CareerService {
         const wc: WorldController = WorldController.getInstance();
         return wc.createWorld();
     }
+
+    public handleContinueCareer(): void {
+        this.handleUpdateDailyState();
+        console.log("Continue Career");
+    }
+
+    public handleUpdateDailyState(): void {
+        this.handleSetPhaseBasedOnWeek();
+        // Additional Daily Logic
+        console.log("Update Daily State");
+    }
+
+    public handleSetPhaseBasedOnWeek(): void {
+        console.log("Set Phase Based On Week");
+        const worlds = World.all();
+        const world = worlds[0];
+
+        // Get all leagues in the world
+        const leagues: League[] = League.query().where('wid', world.id).get();
+
+        // Iterate through each league
+        leagues.forEach(league => {
+            const leg: League = league;
+            // Import the league's schedule, assuming the league schedule type is stored in the league model.
+            let schedule: Phase[];
+            if (leg.scheduleType === 'LEC') {
+                schedule = LEC_SCHEDULE;
+            } else {
+                schedule = DEFAULT_SCHEDULE;
+            }
+            // Loop through the schedule to find the current phase
+            for (let i = 0; i < schedule.length; i++) {
+                const phase = schedule[i];
+                // Check if the current week is within the phase's start and end weeks
+                if (world.currentWeek >= phase.startWeek && world.currentWeek <= phase.endWeek) {
+                    // Update the league's current phase if it's different from the current phase
+                    if (leg.phase !== phase.id) {
+                        leg.phase = phase.id;
+                        leg.$save();
+                        console.log(`Updated ${leg.name} phase to ${phase.name} on week ${world.currentWeek} on day ${world.currentDayOfWeek}`);
+                    }
+                    break;
+                }
+            }
+        });
+    }
+
 
 }
 

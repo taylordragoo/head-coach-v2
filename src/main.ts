@@ -92,6 +92,7 @@ import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
 import {StoreController} from "./controllers";
+import moment from "moment";
 
 const app: App<Element> = createApp(App);
 
@@ -191,4 +192,16 @@ const storeController: StoreController = StoreController.getInstance();
 const store = storeController.getStore()
 app.use(store);
 
+moment.updateLocale('en', {
+    week: {
+        dow: 1, // Monday is the first day of the week
+        doy: 4  // The week that contains Jan 4th is the first week of the year
+    }
+});
+
+console.log(moment('2023-07-10').week()); // This is a Monday
+console.log(moment('2023-07-09').week()); // This is a Sunday
+
 app.mount('#app');
+
+

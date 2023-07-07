@@ -154,6 +154,7 @@ import {
     CareerController
 }  from '@/controllers/index';
 import DatabaseController from "../../controllers/DatabaseController";
+import moment from "moment/moment";
 
 export default {
     data() {
@@ -224,6 +225,8 @@ export default {
         this.databases = await db.getAllDatabases();
 
         console.log(this.databases);
+        console.log(moment('2023-07-10').week()); // This is a Monday
+        console.log(moment('2023-07-09').week());
         const index = this.databases.indexOf('default')
         obj.databases.splice(index,1)
 

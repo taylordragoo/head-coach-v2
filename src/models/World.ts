@@ -18,4 +18,9 @@ export default class World extends Model {
         // Use moment.js to get the week of the year. By default, weeks start on Sunday.
         return moment(this.date).week();
     }
+
+    get currentDayOfWeek() {
+        // Use moment.js to get the day of the week. 0 is Sunday, 1 is Monday, etc.
+        return moment(this.date).format('dddd');
+    }
 }

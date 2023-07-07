@@ -32,10 +32,19 @@ class CareerController {
 
     public createNewCareer: any = (request) => {
         this.careerService.handleCreateNewWorld(request);
+        this.setPhaseBasedOnWeek();
     }
 
     public saveCareer: any = () => {
         this.careerService.handleSaveCareer();
+    }
+
+    public continueCareer(): any {
+        this.careerService.handleContinueCareer();
+    }
+
+    public setPhaseBasedOnWeek: any = () => {
+        this.careerService.handleSetPhaseBasedOnWeek();
     }
 }
 
