@@ -25,7 +25,8 @@ export default class TeamService {
     handleGenerateTeam(lid, tid) {
         const team = new Team();
 
-        // Generate team name and abbreviatio
+        // Generate team name and abbreviation
+        team.id = tid;
         team.lid = lid;
         team.tid = tid;
         team.name = faker.company.companyName();

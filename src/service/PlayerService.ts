@@ -14,8 +14,8 @@ export default class PlayerService {
         return PlayerService.instance;
     }
 
-    handleCreatePlayers(tid) {
-        const p = this.handleGeneratePlayer(tid)
+    handleCreatePlayers(pid, tid) {
+        const p = this.handleGeneratePlayer(pid, tid)
         Player.insert({
             data: p
         })
@@ -23,10 +23,11 @@ export default class PlayerService {
         console.log("Player Created");
     }
 
-    handleGeneratePlayer(tid) {
+    handleGeneratePlayer(pid, tid) {
         const player = new Player();
 
-        player.tid = tid;
+        player.id = pid;
+        player.team_id = tid;
         player.statsTids = [player.tid];
         player.languages = [faker.address.country()];
         player.firstName = faker.name.firstName();

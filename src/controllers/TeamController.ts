@@ -20,9 +20,21 @@ export default class TeamController {
     }
 
     create(lid) {
-        for(let i = 0; i < 10; i++) {
-            this.teamService.handleCreateNewTeam(lid, i)
-            this.playerController.create(i)
+        let nextTeamId = 1
+        let nextPlayerId = 1
+
+        for(let k = 1; k < 31; k++) {
+            for(let i = 0; i < 10; i++) {
+
+                const teamId = nextTeamId++
+                this.teamService.handleCreateNewTeam(k, teamId)
+
+                // Generate unique player IDs
+                for(let j = 0; j < 10; j++) {
+                    const playerId = nextPlayerId++
+                    this.playerController.create(playerId, teamId)
+                }
+            }
         }
     }
 

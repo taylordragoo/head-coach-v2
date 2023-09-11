@@ -4,6 +4,7 @@ import World from '@/models/World';
 
 export default class User extends Model {
     static entity = 'user'
+
     static fields () {
         return {
             id: this.attr(null),
@@ -20,5 +21,13 @@ export default class User extends Model {
 
     get full_name () {
         return `${this.first} ${this.last}`
+    }
+
+    get team_obj() {
+        return Team.find(this.team_id);
+    }
+
+    get team_league() {
+        return this.team_obj.league;
     }
 }

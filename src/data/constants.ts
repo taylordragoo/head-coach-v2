@@ -11,6 +11,54 @@ export type PHASE = {
     endWeek: number;
 };
 
+export const DEFAULT_PHASE: {
+        PRESEASON: number;
+        SPRING_SEASON: number;
+        SPRING_PLAYOFFS: number;
+        MID_SEASON_INVITATIONAL: number;
+        SUMMER_SEASON: number;
+        SUMMER_PLAYOFFS: number;
+        REGIONAL_FINALS: number;
+        WORLD_CHAMPIONSHIP: number;
+        OFFSEASON: number;
+    } = {
+        PRESEASON: 0,
+        SPRING_SEASON: 1,
+        SPRING_PLAYOFFS: 2,
+        MID_SEASON_INVITATIONAL: 3,
+        SUMMER_SEASON: 4,
+        SUMMER_PLAYOFFS: 5,
+        REGIONAL_FINALS: 6,
+        WORLD_CHAMPIONSHIP: 7,
+        OFFSEASON: 8,
+};
+
+export const LEC_PHASE: {
+        PRESEASON: number;
+        WINTER_SEASON: number;
+        WINTER_PLAYOFFS: number;
+        SPRING_SEASON: number;
+        SPRING_PLAYOFFS: number;
+        MID_SEASON_INVITATIONAL: number;
+        SUMMER_SEASON: number;
+        SUMMER_PLAYOFFS: number;
+        REGIONAL_FINALS: number;
+        WORLD_CHAMPIONSHIP: number;
+        OFFSEASON: number;
+    } = {
+        PRESEASON: 0,
+        WINTER_SEASON: 1,
+        WINTER_PLAYOFFS: 2,
+        SPRING_SEASON: 3,
+        SPRING_PLAYOFFS: 4,
+        MID_SEASON_INVITATIONAL: 5,
+        SUMMER_SEASON: 6,
+        SUMMER_PLAYOFFS: 7,
+        REGIONAL_FINALS: 8,
+        WORLD_CHAMPIONSHIP: 9,
+        OFFSEASON: 10,
+}
+
 export const LEC_SCHEDULE: Phase[] = [
     { id: 0, name: 'PRESEASON', startWeek: 1, endWeek: 2 },
     { id: 1, name: 'WINTER_SEASON', startWeek: 3, endWeek: 10 },

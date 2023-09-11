@@ -1,12 +1,13 @@
 import { Model } from '@vuex-orm/core';
+import Team from '@/models/Team';
 
 export default class Player extends Model {
-    static entity = 'player';
+    static entity: string = 'player';
 
     static fields() {
         return {
             id: this.attr(null),
-            tid: this.number(0),
+            team_id: this.attr(''),
             statsTids: this.attr([]),
             languages: this.attr([]),
             firstName: this.string(''),
@@ -38,7 +39,7 @@ export default class Player extends Model {
             ban: this.number(0),
             hof: this.boolean(false),
             watch: this.boolean(false),
-            gamesUntilTradable: this.number(0),
+            gamesUntilTradeable: this.number(0),
             value: this.number(0),
             valueNoPot: this.number(0),
             valueMMR: this.number(0),
@@ -51,7 +52,8 @@ export default class Player extends Model {
                 exp: 0
             }),
             pid: this.number(0),
-            diedYear: this.number(null)
+            diedYear: this.number(null),
+            team: this.belongsTo(Team, 'team_id')
         }
     }
 }

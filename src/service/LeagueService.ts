@@ -1,4 +1,7 @@
 import League from '@/models/League';
+import Team from "@/models/Team";
+import Match from "@/models/Match";
+import _ from 'lodash';
 
 export default class LeagueService {
     private static instance: LeagueService;
@@ -13,9 +16,9 @@ export default class LeagueService {
         return LeagueService.instance;
     }
 
-    handleCreateDefaultLeagues()
+    async handleCreateDefaultLeagues()
     {
-        League.insert({
+        await League.insert({
             data: [
                 {
                     id: 1,
@@ -319,5 +322,62 @@ export default class LeagueService {
                 }
             ]
         })
+
+        for(let i = 0; i < 30; i++) {
+            await this.generateSchedule(i);
+        }
+    }
+
+    async generateSchedule(leagueId) {
+        let teams = Team.query().where('lid', leagueId).get();
+        let shuffledTeams = _.shuffle(teams);
+        let matches = this.handleGenerateMatches(shuffledTeams);
+
+        for (let week in matches) {
+            for (let match of matches[week]) {
+                console.log(match);
+                 await Match.insert({
+                    data: {
+                        homeTeamId: match.homeTeam.tid,
+                        awayTeamId: match.awayTeam.tid,
+                        week: parseInt(week) + 1,
+                        leagueId: leagueId,
+                    }
+                });
+            }
+        }
+    }
+
+    handleGenerateMatches(teams) {
+        let teams2 = teams.slice()
+        let matches = []
+
+        if (teams2.length % 2 === 1) {
+            teams2.push(null)
+        }
+
+        const weeks = 2; // Define the number of rounds, it is missing in your function.
+
+        for (let matchday = 0; matchday < weeks * (teams2.length - 1); matchday++) {
+            matches.push([])
+            for (let match = 0; match < teams2.length / 2; match++) {
+                let homeTeam, awayTeam;
+
+                if (matchday % 2 === 1) {
+                    homeTeam = teams2[match]
+                    awayTeam = teams2[teams2.length - match - 1]
+                } else {
+                    homeTeam = teams2[teams2.length - match - 1]
+                    awayTeam = teams2[match]
+                }
+
+                if (homeTeam !== null && awayTeam !== null) {
+                    matches[matchday].push({homeTeam: homeTeam, awayTeam: awayTeam})
+                }
+            }
+            teams2 = [teams2[0], teams2[teams2.length - 1]].concat(teams2.slice(1, teams2.length - 1))
+        }
+
+        return matches;
     }
 }

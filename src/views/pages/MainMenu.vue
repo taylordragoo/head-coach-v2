@@ -82,8 +82,13 @@
 
         <div class="formgrid grid">
             <div class="field col">
-                <label>Team Selection</label>
-                <Dropdown id="inventoryStatus" v-model='team' :options="teams" optionLabel="name" placeholder="Select a team..."></Dropdown>
+                <label>League Selection</label>
+                <Dropdown id="inventoryStatus" v-model='league' :options="leagues" optionLabel="name" placeholder="Select a team..."></Dropdown>
+            </div>
+
+            <div class="field col">
+              <label>Team Selection</label>
+              <Dropdown id="inventoryStatus" v-model='team' :options="league.teams" optionLabel="name" placeholder="Select a team..."></Dropdown>
             </div>
 
             <div class="field col">
@@ -91,6 +96,15 @@
                 <Dropdown id="inventoryStatus" v-model='skill' :options="skills" optionLabel="skill" placeholder="Choose your skillset..."></Dropdown>
             </div>
         </div>
+
+<!--        <div class="col-12">-->
+<!--            <div class="card">-->
+<!--                <h5>Team Selection</h5>-->
+<!--                <TreeTable :value="treeTableValue" selectionMode="checkbox" v-model:selectionKeys="selectedTreeTableValue">-->
+<!--                    <Column field="name" header="Name" :expander="true"></Column>-->
+<!--                </TreeTable>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <template #footer>
             <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog"/>
@@ -146,7 +160,6 @@
 </template>
 
 <script>
-import { Dexie } from 'dexie';
 import {
     UserController,
     TeamController,
@@ -155,6 +168,7 @@ import {
 }  from '@/controllers/index';
 import DatabaseController from "../../controllers/DatabaseController";
 import moment from "moment/moment";
+import { NodeService } from '@/service/NodeService';
 
 export default {
     data() {
@@ -163,9 +177,12 @@ export default {
             last_name: '',
             age: null,
             exp: '',
+            league: { teams: [] },
             team: null,
             skill: null,
+            players: null,
             teams: null,
+            leagues: null,
             value1: 0,
             db: null,
             databases: [],
@@ -177,6 +194,10 @@ export default {
             coachDialog: false,
             continueDialog: false,
             loadingDialog: false,
+            selectedTreeTableValue: null,
+            treeTableValue: null,
+            selectedTreeValue: null,
+            treeValue: null,
             statuses: [
                 {label: 'None', value: 0 },
                 {label: 'High School', value: 1 },
@@ -203,10 +224,12 @@ export default {
         this.careerController = new CareerController()
         this.worldController = new WorldController()
         this.databaseController = DatabaseController.getInstance()
+        this.getDefaultTeamsLeagues() // Check for existing saves
+        this.nodeService = new NodeService();
     },
     mounted() {
         this.$store.dispatch('resetState')
-        this.checkForData()
+      // this.nodeService.getTreeTableNodes().then((data) => (this.treeTableValue = data));
     },
     watch: {
         value1() {
@@ -218,18 +241,66 @@ export default {
         }
     },
     methods: {
-      async checkForData() {
+      async getDefaultTeamsLeagues() {
+        const data = await this.databaseController.initDefaultDatabase();
+        this.leagues = data.leagues;
+        this.teams = data.teams;
+        this.players = data.players
+        this.treeTableValue = this.assignTeamsToLeagues(this.leagues, this.teams, this.players)
         const obj = this
-        const db = this.databaseController;
-        await db.initDefaultDatabase();
-        this.databases = await db.getAllDatabases();
-
-        console.log(this.databases);
-        console.log(moment('2023-07-10').week()); // This is a Monday
-        console.log(moment('2023-07-09').week());
+        this.databases = await this.databaseController.getAllDatabases();
         const index = this.databases.indexOf('default')
         obj.databases.splice(index,1)
+      },
+      assignTeamsToLeagues(leagues, teams, players) {
+        // This will hold our transformed data
+        let leagueTree = [];
 
+        for (let league of leagues) {
+          let leagueTeams = teams.filter(team => team.lid === league.id);
+          for (let team of leagueTeams) {
+            league.teams.push(team);
+            let teamPlayers = players.filter(player => player.team_id === team.id);
+            for (let player of teamPlayers) {
+              team.players.push(player);
+            }
+          }
+        }
+
+        for (let league of leagues) {
+          // Find the teams for the current league
+          let leagueTeams = teams.filter(team => team.lid === league.id);
+
+          // Transform the leagueTeams into the required format
+          let children = leagueTeams.map(team => {
+            // Find the players for the current team
+            let teamPlayers = players.filter(player => player.team_id === team.id);
+
+            // Transform the teamPlayers into the required format
+            let playerChildren = teamPlayers.map(player => ({
+              key: `${team.lid}-${team.id}-${player.id}`,
+              data: player,
+            }));
+
+            return {
+              key: `${team.lid}-${team.id}`,
+              data: team,
+              children: playerChildren, // Add the players as children of the team
+            };
+          });
+
+          // Transform the league into the required format, including its teams
+          let leagueNode = {
+            key: String(league.id),
+            data: league,
+            children,
+          };
+
+          // Add the transformed league to our result array
+          leagueTree.push(leagueNode);
+        }
+
+        return leagueTree;
       },
       async loadSelectedCareer(name) {
           let obj = this
@@ -252,8 +323,8 @@ export default {
           last: obj.last_name,
           age: obj.age,
           exp: obj.exp.label,
-          skill: obj.skill,
-          team_id: 0
+          skill: obj.skill.skill,
+          team_id: obj.team.id,
         }
 
         obj.restartTimer();

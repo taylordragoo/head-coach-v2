@@ -14,3 +14,4 @@ package-lock.json
 layout.css
 .sass-cache
 theme-*.map
+/src/faker/

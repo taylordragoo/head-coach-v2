@@ -2,9 +2,11 @@ import { Model } from '@vuex-orm/core'
 import Season from '@/models/Season';
 import Stats from '@/models/Stats';
 import Player from '@/models/Player';
+import League from "@/models/League";
 
 export default class Team extends Model {
-    static entity = 'team'
+    static entity: string = 'team'
+
     static fields() {
         return {
             id: this.attr(null),
@@ -46,7 +48,8 @@ export default class Team extends Model {
             }),
             seasons: this.hasMany(Season, 'tid'),
             stats: this.hasMany(Stats, 'tid'),
-            players: this.hasMany(Player, 'tid')
+            players: this.hasMany(Player, 'team_id'),
+            league: this.belongsTo(League, 'lid')
         };
     }
 }

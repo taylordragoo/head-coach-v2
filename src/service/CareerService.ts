@@ -88,7 +88,7 @@ class CareerService {
     public async handleLoadSelectedCareer(name: string): Promise<void> {
         try {
             const dbc: DatabaseController = DatabaseController.getInstance();
-            const db: Dexie | null = await dbc.openDatabase(name);
+            const db: Dexie | null = await dbc.openExistingDatabase(name);
             if (db) {
                 const data: any= await dbc.getCareerDataFromDatabase(db);
                 await this.handleInsertVuexData(data);
@@ -102,11 +102,11 @@ class CareerService {
     public async handleInsertVuexData(request): Promise<void>{
         try {
             // insert data into vuex-orm store
-            await Team.insert({ data: request.teams })
             await User.insert({ data: request.user })
-            await Player.insert({ data: request.players })
-            await League.insert({ data: request.leagues })
             await World.insert({ data: request.world })
+            await League.insert({ data: request.leagues })
+            await Team.insert({ data: request.teams })
+            await Player.insert({ data: request.players })
             await Champion.insert({ data: request.champions })
             await Counter.insert({ data: request.counters })
             await Synergy.insert({ data: request.synergys })
@@ -156,9 +156,11 @@ class CareerService {
         console.log("Set Phase Based On Week");
         const worlds = World.all();
         const world = worlds[0];
-
+        let leagues: League[] = [];
         // Get all leagues in the world
-        const leagues: League[] = League.query().where('wid', world.id).get();
+        if(world) {
+            leagues = League.query().where('wid', world.id).get();
+        }
 
         // Iterate through each league
         leagues.forEach(league => {

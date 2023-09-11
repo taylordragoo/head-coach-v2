@@ -3,7 +3,8 @@ import League from '@/models/League';
 import moment from 'moment';
 
 export default class World extends Model {
-    static entity = 'world'
+    static entity: string = 'world'
+
     static fields () {
         return {
             id: this.attr(null),

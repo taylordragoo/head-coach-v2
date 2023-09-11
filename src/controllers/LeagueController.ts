@@ -21,8 +21,6 @@ export default class LeagueController {
 
     createDefaultLeagues() {
         this.leagueService.handleCreateDefaultLeagues()
-        for(let i = 1; i < 31; i++) {
-            this.teamController.create(i)
-        }
+        this.teamController.create()
     }
 }

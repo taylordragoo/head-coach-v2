@@ -47,8 +47,10 @@ class DatabaseService {
         if (count === 0) {
             const data = this.generateData();
             console.log(data);
-            this.populateDB(data);
+            await this.populateDB(data);
             // this.dbTemplate.close();
+        } else {
+            return await this.handleGetCareerDataFromDatabase(this.dbTemplate);
         }
     }
 
@@ -57,7 +59,7 @@ class DatabaseService {
         await this.initDB(this.db);
         await this.copyDB(this.dbTemplate, this.db);
 
-        User.insert({
+        await User.insert({
             data: {
                 id: 0,
                 first: request.first,
@@ -80,6 +82,7 @@ class DatabaseService {
         const champs = await this.db.table('champions').toArray();
         const counters = await this.db.table('counters').toArray();
         const synergys = await this.db.table('synergys').toArray();
+        const matches = await this.db.table('matches').toArray();
 
         await Team.insert({ data: team })
         await Player.insert({ data: player })
@@ -88,6 +91,7 @@ class DatabaseService {
         await Champion.insert({ data: champs })
         await Counter.insert({ data: counters })
         await Synergy.insert({ data: synergys })
+        await Match.insert({ data: matches })
 
         await this.handleCloseDatabase(this.dbTemplate);
 
@@ -103,6 +107,7 @@ class DatabaseService {
             champions: "$id",
             counters: "id",
             synergys: "id",
+            matches: "id"
         });
         await db.open().catch((error) => {
             console.error("Failed to open db: ", error);
@@ -135,32 +140,33 @@ class DatabaseService {
 
     async handleSaveCareer() {
         try {
-            let user: User = await User.all();
-            user = user[0];
-            const db_name = user.first + " " + user.last;
+            let u: User = User.all();
+            u = u[0];
+            console.log(u);
+            const db_name = u.first + " " + u.last;
 
-            const teams = await Team.all().map(team => {
+            const t = Team.all().map(team => {
                 return {
                     ...team,
                     budget: {
-                        scouting: { ...team.budget.scouting },
-                        coaching: { ...team.budget.coaching },
-                        health: { ...team.budget.health },
-                        facilities: { ...team.budget.facilities },
+                        scouting: {...team.budget.scouting},
+                        coaching: {...team.budget.coaching},
+                        health: {...team.budget.health},
+                        facilities: {...team.budget.facilities},
                     },
-                    coach: { ...team.coach },
+                    coach: {...team.coach},
                 };
             });
 
-            const players = await Player.all().map(player => {
+            const p = Player.all().map(player => {
                 return {
                     ...player,
-                    born: { ...player.born },
-                    injury: { ...player.injury },
-                    contract: { ...player.contract },
-                    ratings: player.ratings.map(rating => ({ ...rating })),
+                    born: {...player.born},
+                    injury: {...player.injury},
+                    contract: {...player.contract},
+                    ratings: player.ratings.map(rating => ({...rating})),
                     champions: [...player.champions],
-                    championsRnk: { ...player.championsRnk },
+                    championsRnk: {...player.championsRnk},
                     awards: [...player.awards],
                     salaries: [...player.salaries],
                     statsTids: Array.from(player.statsTids),
@@ -170,10 +176,10 @@ class DatabaseService {
 
             const request = {
                 type: "save",
-                user: user,
+                user: u,
                 world: World.all(),
-                players: players,
-                teams: teams,
+                players: p,
+                teams: t,
                 leagues: League.all(),
                 counters: Counter.all(),
                 synergys: Synergy.all(),
@@ -183,7 +189,7 @@ class DatabaseService {
 
             console.log(request)
 
-            const db: Dexie | null = await this.handleOpenDatabase(request.db);
+            const db: Dexie | null = await this.handleOpenExistingDatabase(request.db);
 
             if(db) {
                 await this.handleBulkPutOperation(db.world, request.world, 'world');
@@ -201,7 +207,7 @@ class DatabaseService {
         }
     }
 
-    public async handleOpenDatabase(name: string) {
+    public async handleOpenExistingDatabase(name: string) {
         if (await this.handleDbExistence(name)) {
             const db = new Dexie(name);
             db.version(1).stores({
@@ -233,14 +239,14 @@ class DatabaseService {
 
     public async handleGetCareerDataFromDatabase(db: Dexie) {
         try {
-            const teams = await db.table('teams').toArray();
-            const players = await db.table('players').toArray();
-            const user = await db.table('user').toArray();
-            const world = await db.table('world').toArray();
-            const leagues = await db.table('leagues').toArray();
-            const champions = await db.table('champions').toArray();
-            const counters = await db.table('counters').toArray();
-            const synergys = await db.table('synergys').toArray();
+            const teams: Team[] = await db.table('teams').toArray();
+            const players: Player[] = await db.table('players').toArray();
+            const user: User[] = await db.table('user').toArray();
+            const world: World[] = await db.table('world').toArray();
+            const leagues: League[] = await db.table('leagues').toArray();
+            const champions: Champion[] = await db.table('champions').toArray();
+            const counters: Counter[] = await db.table('counters').toArray();
+            const synergys: Synergy[] = await db.table('synergys').toArray();
 
             return {
                 user: user,
@@ -287,7 +293,6 @@ class DatabaseService {
 
         return false;
     };
-
 
     public async handleDeleteCareer(db) {
         try {

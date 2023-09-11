@@ -2,7 +2,7 @@
     <div class="layout-topbar">
         <div v-if='user != null' class="layout-breadcrumb viewname" style="text-transform: uppercase">
             <template v-if="$route.meta.breadcrumb">
-                <span>{{ $route.name + " | " + user.full_name + " | " + world.currentDayOfWeek + ' ' + world.date }}</span>
+                <span>{{ league_phase + " | " + user.full_name + " | " + world.currentDayOfWeek + ' ' + world.date }}</span>
             </template>
         </div>
         <div v-else  class="layout-breadcrumb viewname" style="text-transform: uppercase"></div>
@@ -102,19 +102,19 @@
             </div>
           </div>
         </Dialog>
+
     </div>
 </template>
 <script>
   import moment from 'moment';
   import AppSidebar from '@/layout/AppSidebar.vue';
   import AppBreadcrumb from './AppBreadcrumb.vue';
-  import router from '@/router';
   import World from "../models/World";
   import League from "../models/League";
   import User from "../models/User";
   import Team from "../models/Team";
   import Player from "../models/Player";
-  import { CareerController, DatabaseController } from "../controllers";
+  import { CareerController } from "../controllers";
 
   export default {
     components: {
@@ -155,38 +155,24 @@
       }
     },
     computed: {
-      // logo() {
-      //   // replace 'this.layoutConfig' with your actual layout config
-      //   return this.layoutConfig.colorScheme === 'dark' ? 'white' : 'dark';
-      // },
-      players: {
-        /* By default get() is used */
-        get() {
-          return Player.all()
-        },
-        /* We add a setter */
-        set(value) {
-          this.$store.commit('updatePlayers', value)
-        }
-      },
-      teams: {
-        /* By default get() is used */
-        get() {
-          return Team.query().with('players').orderBy('name').all()
-        },
-        /* We add a setter */
-        set(value) {
-          this.$store.commit('updateTeams', value)
-        }
-      },
       user: {
         /* By default get() is used */
         get() {
-          return User.query().with('team.players').with('world.leagues.teams.players').first()
+          return User.query().with('team.league.players').first()
         },
         /* We add a setter */
         set(value) {
           this.$store.commit('updateUser', value)
+        }
+      },
+      world: {
+        /* By default get() is used */
+        get() {
+          return World.query().with('leagues.teams.players').first()
+        },
+        /* We add a setter */
+        set(value) {
+          this.$store.commit('updateWorld', value)
         }
       },
       league: {
@@ -199,14 +185,28 @@
           this.$store.commit('updateUser', value)
         }
       },
-      world: {
+      league_phase() {
+        const league = League.query().where('id', this.user.team.lid).first();
+        return league.phase_name;
+      },
+      teams: {
         /* By default get() is used */
         get() {
-          return World.query().with('leagues').first()
+          return Team.query().with('players').orderBy('name').all()
         },
         /* We add a setter */
         set(value) {
-          this.$store.commit('updateWorld', value)
+          this.$store.commit('updateTeams', value)
+        }
+      },
+      players: {
+        /* By default get() is used */
+        get() {
+          return Player.query().with('team').all();
+        },
+        /* We add a setter */
+        set(value) {
+          this.$store.commit('updatePlayers', value)
         }
       },
     },
@@ -277,6 +277,9 @@
       },
       openContinue() {
         this.loadingDialog = true;
+        const players = Player.query().where('tid', 0).get();
+        console.log(players);
+
         // this.continueToTomorrow(this.world.date);
         this.restartTimer();
       },

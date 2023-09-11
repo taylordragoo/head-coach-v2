@@ -48,12 +48,12 @@ class DatabaseController {
         return this.databaseService.handleSaveCareer();
     }
 
-    public openDatabase(name: string) {
-        return this.databaseService.handleOpenDatabase(name);
+    public openExistingDatabase(name: string) {
+        return this.databaseService.handleOpenExistingDatabase(name);
     }
 
     public closeDatabase() {
-        this.databaseService.handleCloseDatabase();
+        this.databaseService.handleCloseDatabase(db);
     }
 
     public getDatabase() {
