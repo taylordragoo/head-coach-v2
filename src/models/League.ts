@@ -1,8 +1,10 @@
 import { Model } from '@vuex-orm/core'
 import Team from '@/models/Team';
+import Match from '@/models/Match';
 import { DEFAULT_SCHEDULE } from '@/data/constants';
+import ILeague from '@/interfaces/ILeague';
 
-export default class League extends Model {
+export default class League extends Model implements ILeague {
     static entity: string = 'league'
 
     static fields () {
@@ -15,7 +17,7 @@ export default class League extends Model {
             teams: this.hasMany(Team, 'lid'),
             phase: this.number(0),
             tier: this.number(0),
-            scheduleType: this.string('')
+            matches: this.hasMany(Match, 'leagueId')
         }
     }
 
@@ -23,13 +25,9 @@ export default class League extends Model {
 
         let phase = null;
         // Find the matching phase in DEFAULT_SCHEDULE
-        if(this.scheduleType === 'LEC') {
-            phase = LEC_SCHEDULE.find(p => p.id === this.phase);
-        } else {
-            phase = DEFAULT_SCHEDULE.find(p => p.id === this.phase);
-        }
+        phase = DEFAULT_SCHEDULE.find(p => p.id === this.phase);
 
         // If there is a matching phase, return its name. Otherwise, return 'Unknown'.
-        return phase ? phase.name : 'Unknown';
+        return phase ? phase.display_name : 'Unknown';
     }
 }

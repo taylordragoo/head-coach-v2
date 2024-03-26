@@ -175,7 +175,7 @@ const checkActiveRoute = (item) => {
 
 <template>
     <li ref="menuItemRef" :class="{ 'layout-root-menuitem': root, 'active-menuitem': isStatic ? !root && isActiveMenu : isActiveMenu }">
-        <div v-if="root && item.visible !== false" class="layout-menuitem-root-text">{{ item.label }}</div>
+        <!-- <div v-if="root && item.visible !== false" class="layout-menuitem-root-text">{{ item.label }}</div> -->
         <a
             v-if="(!item.to || item.items) && item.visible !== false"
             :href="item.url"

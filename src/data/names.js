@@ -1,4 +1,4 @@
-let first = {
+let first= {
     "Angola": [
         ["Armando", 1],
         ["Divaldo", 2],

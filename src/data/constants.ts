@@ -6,83 +6,28 @@ export const DIFFICULTY = {
 };
 
 export type PHASE = {
+    id: number;
     name: string;
+    display_name: string;
     startWeek: number;
     endWeek: number;
 };
 
-export const DEFAULT_PHASE: {
-        PRESEASON: number;
-        SPRING_SEASON: number;
-        SPRING_PLAYOFFS: number;
-        MID_SEASON_INVITATIONAL: number;
-        SUMMER_SEASON: number;
-        SUMMER_PLAYOFFS: number;
-        REGIONAL_FINALS: number;
-        WORLD_CHAMPIONSHIP: number;
-        OFFSEASON: number;
-    } = {
-        PRESEASON: 0,
-        SPRING_SEASON: 1,
-        SPRING_PLAYOFFS: 2,
-        MID_SEASON_INVITATIONAL: 3,
-        SUMMER_SEASON: 4,
-        SUMMER_PLAYOFFS: 5,
-        REGIONAL_FINALS: 6,
-        WORLD_CHAMPIONSHIP: 7,
-        OFFSEASON: 8,
-};
-
-export const LEC_PHASE: {
-        PRESEASON: number;
-        WINTER_SEASON: number;
-        WINTER_PLAYOFFS: number;
-        SPRING_SEASON: number;
-        SPRING_PLAYOFFS: number;
-        MID_SEASON_INVITATIONAL: number;
-        SUMMER_SEASON: number;
-        SUMMER_PLAYOFFS: number;
-        REGIONAL_FINALS: number;
-        WORLD_CHAMPIONSHIP: number;
-        OFFSEASON: number;
-    } = {
-        PRESEASON: 0,
-        WINTER_SEASON: 1,
-        WINTER_PLAYOFFS: 2,
-        SPRING_SEASON: 3,
-        SPRING_PLAYOFFS: 4,
-        MID_SEASON_INVITATIONAL: 5,
-        SUMMER_SEASON: 6,
-        SUMMER_PLAYOFFS: 7,
-        REGIONAL_FINALS: 8,
-        WORLD_CHAMPIONSHIP: 9,
-        OFFSEASON: 10,
-}
-
-export const LEC_SCHEDULE: Phase[] = [
-    { id: 0, name: 'PRESEASON', startWeek: 1, endWeek: 2 },
-    { id: 1, name: 'WINTER_SEASON', startWeek: 3, endWeek: 10 },
-    { id: 2, name: 'WINTER_PLAYOFFS', startWeek: 11, endWeek: 13 },
-    { id: 3, name: 'SPRING_SEASON', startWeek: 14, endWeek: 21 },
-    { id: 4, name: 'SPRING_PLAYOFFS', startWeek: 22, endWeek: 24 },
-    { id: 5, name: 'MID_SEASON_INVITATIONAL', startWeek: 25, endWeek: 27 },
-    { id: 6, name: 'SUMMER_SEASON', startWeek: 28, endWeek: 35 },
-    { id: 7, name: 'SUMMER_PLAYOFFS', startWeek: 36, endWeek: 38 },
-    { id: 8, name: 'REGIONAL_FINALS', startWeek: 39, endWeek: 41 },
-    { id: 9, name: 'WORLD_CHAMPIONSHIP', startWeek: 42, endWeek: 44 },
-    { id: 10, name: 'OFFSEASON', startWeek: 45, endWeek: 52 }
-];
-
-export const DEFAULT_SCHEDULE: Phase[] = [
-    { id: 0, name: 'PRESEASON', startWeek: 1, endWeek: 2 },
-    { id: 1, name: 'SPRING_SEASON', startWeek: 3, endWeek: 10 },
-    { id: 2, name: 'SPRING_PLAYOFFS', startWeek: 11, endWeek: 13 },
-    { id: 3, name: 'MID_SEASON_INVITATIONAL', startWeek: 14, endWeek: 16 },
-    { id: 4, name: 'SUMMER_SEASON', startWeek: 17, endWeek: 24 },
-    { id: 5, name: 'SUMMER_PLAYOFFS', startWeek: 25, endWeek: 27 },
-    { id: 6, name: 'REGIONAL_FINALS', startWeek: 28, endWeek: 30 },
-    { id: 7, name: 'WORLD_CHAMPIONSHIP', startWeek: 31, endWeek: 33 },
-    { id: 8, name: 'OFFSEASON', startWeek: 34, endWeek: 52 }
+export const DEFAULT_SCHEDULE: PHASE[] = [
+    { id: 0, name: 'END_OF_SEASON', display_name: 'End of Season', startWeek: 7, endWeek: 8 },
+    { id: 1, name: 'FREE_AGENCY', display_name: 'Free Agency', startWeek: 9, endWeek: 12 },
+    { id: 2, name: 'SCOUTING_COMBINE', display_name: 'Scouting Combine', startWeek: 13, endWeek: 14 },
+    { id: 3, name: 'PRO_DAYS', display_name: 'Pro Days', startWeek: 15, endWeek: 16 },
+    { id: 4, name: 'DRAFT', display_name: 'Draft', startWeek: 17, endWeek: 18 },
+    { id: 5, name: 'AFTER_DRAFT', display_name: 'Post-Draft Free Agency', startWeek: 19, endWeek: 20 },
+    { id: 6, name: 'ROOKIE_MINICAMP', display_name: 'Rookie Minicamp', startWeek: 21, endWeek: 22 },
+    { id: 7, name: 'OTA', display_name: 'Organized Team Activities', startWeek: 23, endWeek: 26 },
+    { id: 8, name: 'TRAINING_CAMP', display_name: 'Training Camp', startWeek: 27, endWeek: 30 },
+    { id: 9, name: 'PRESEASON', display_name: 'Preseason', startWeek: 31, endWeek: 34 },
+    { id: 10, name: 'REGULAR_SEASON', display_name: 'Regular Season', startWeek: 35, endWeek: 44 },
+    { id: 11, name: 'PLAYOFFS', display_name: 'Playoffs', startWeek: 45, endWeek: 1 },
+    { id: 12, name: 'SUPER_BOWL', display_name: 'Super Bowl', startWeek: 2, endWeek: 3 },
+    { id: 13, name: 'POST_SEASON', display_name: 'Post-Season', startWeek: 4, endWeek: 6 }
 ];
 
 export type PLAYER_STATE = {

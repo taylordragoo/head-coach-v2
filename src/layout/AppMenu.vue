@@ -7,20 +7,108 @@ const model = ref([
         icon: 'pi pi-home',
         items: [
             {
-                label: 'E-Commerce',
+                label: 'Home',
                 icon: 'pi pi-fw pi-home',
                 to: '/home',
-            },
-            {
-                label: 'Banking',
-                icon: 'pi pi-fw pi-image',
-                to: '/dashboard-banking',
             },
         ],
     },
     { separator: true },
     {
-        label: 'Apps',
+        label: '',
+        icon: 'pi pi-th-large',
+        items: [
+            {
+                label: 'Inbox',
+                icon: 'pi pi-fw pi-inbox',
+                to: '/apps/mail/inbox',
+            },
+            // {
+            //     label: 'Blog',
+            //     icon: 'pi pi-fw pi-comment',
+            //     items: [
+            //         {
+            //             label: 'List',
+            //             icon: 'pi pi-fw pi-image',
+            //             to: '/apps/blog/list',
+            //         },
+            //         {
+            //             label: 'Detail',
+            //             icon: 'pi pi-fw pi-list',
+            //             to: '/apps/blog/detail',
+            //         },
+            //         {
+            //             label: 'Edit',
+            //             icon: 'pi pi-fw pi-pencil',
+            //             to: '/apps/blog/edit',
+            //         },
+            //     ],
+            // },
+            {
+                label: 'Calendar',
+                icon: 'pi pi-fw pi-calendar',
+                to: '/apps/calendar',
+            },
+            {
+                label: 'Chat',
+                icon: 'pi pi-fw pi-comments',
+                to: '/apps/chat',
+            },
+            // {
+            //     label: 'Files',
+            //     icon: 'pi pi-fw pi-folder',
+            //     to: '/apps/files',
+            // },
+            {
+                label: 'Roster',
+                icon: 'pi pi-fw pi-folder',
+                to: '/apps/roster',
+            },
+            // {
+            //     label: 'Mail',
+            //     icon: 'pi pi-fw pi-envelope',
+            //     items: [
+            //         {
+            //             label: 'Inbox',
+            //             icon: 'pi pi-fw pi-inbox',
+            //             to: '/apps/mail/inbox',
+            //         },
+            //         {
+            //             label: 'Compose',
+            //             icon: 'pi pi-fw pi-pencil',
+            //             to: '/apps/mail/compose',
+            //         },
+            //         {
+            //             label: 'Detail',
+            //             icon: 'pi pi-fw pi-comment',
+            //             to: '/apps/mail/detail/1000',
+            //         },
+            //     ],
+            // },
+            {
+                label: 'Task List',
+                icon: 'pi pi-fw pi-check-square',
+                to: '/apps/tasklist',
+            },
+        ],
+    },
+]);
+
+const og = ref([
+    {
+        label: 'Dashboards',
+        icon: 'pi pi-home',
+        items: [
+            {
+                label: 'Home',
+                icon: 'pi pi-fw pi-home',
+                to: '/home',
+            },
+        ],
+    },
+    { separator: true },
+    {
+        label: '',
         icon: 'pi pi-th-large',
         items: [
             {
@@ -58,6 +146,11 @@ const model = ref([
                 label: 'Files',
                 icon: 'pi pi-fw pi-folder',
                 to: '/apps/files',
+            },
+            {
+                label: 'Inbox',
+                icon: 'pi pi-fw pi-inbox',
+                to: '/apps/mail/inbox',
             },
             {
                 label: 'Mail',

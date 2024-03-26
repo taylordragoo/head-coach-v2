@@ -1,5 +1,31 @@
 import {createRouter, createWebHashHistory, Router} from 'vue-router';
+// @ts-ignore
 import AppLayout from '@/layout/AppLayout.vue';
+// @ts-ignore
+import Tree from '@/views/uikit/Tree.vue';
+import {StoreService} from '@/service/';
+
+const new_routes = [
+    {
+        path: '/home',
+        component: AppLayout,
+        children: [
+            {
+                path: '/home',
+                name: 'e-commerce',
+                meta: {
+                    breadcrumb: ['Home'],
+                },
+                component: () => import('@/views/dashboards/Home.vue'),
+            }
+        ],
+    },
+    {
+        path: '/',
+        name: 'main-menu',
+        component: () => import('@/views/pages/MainMenu.vue'),
+    }
+];
 
 const routes = [
     {
@@ -10,9 +36,9 @@ const routes = [
                 path: '/home',
                 name: 'e-commerce',
                 meta: {
-                    breadcrumb: ['E-COMMERCE DASHBOARD'],
+                    breadcrumb: ['Home'],
                 },
-                component: () => import('@/views/dashboards/Ecommerce.vue'),
+                component: () => import('@/views/dashboards/Home.vue'),
             },
             {
                 path: '/dashboard-banking',
@@ -46,6 +72,11 @@ const routes = [
                 component: () => import('@/views/apps/Files.vue'),
             },
             {
+                path: '/apps/roster',
+                name: 'roster',
+                component: () => import('@/views/apps/TeamRoster.vue'),
+            },
+            {
                 path: '/apps/chat',
                 name: 'chat',
                 component: () => import('@/views/apps/chat/Index.vue'),
@@ -54,6 +85,11 @@ const routes = [
                 path: '/apps/tasklist',
                 name: 'tasklist',
                 component: () => import('@/views/apps/tasklist/Index.vue'),
+            },
+            {
+                path: '/apps/mail/inbox',
+                name: 'mail-inbox',
+                component: () => import('@/views/apps/mail/MailTypes.vue'),
             },
             {
                 path: '/apps/mail',
@@ -163,7 +199,7 @@ const routes = [
                 meta: {
                     breadcrumb: ['UI Kit', 'Tree'],
                 },
-                component: () => import('@/views/uikit/Tree.vue'),
+                component: () => Tree,
             },
             {
                 path: '/uikit/panel',
@@ -471,5 +507,12 @@ const router: Router = createRouter({
         return { left: 0, top: 0 };
     },
 });
+
+const storeService = StoreService.getInstance();
+
+router.beforeEach(async (to, from, next) => {
+    await storeService.store.restored;
+    next();
+  });  
 
 export default router;

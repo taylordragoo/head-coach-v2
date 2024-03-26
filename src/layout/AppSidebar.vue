@@ -32,10 +32,6 @@ const anchor = () => {
 <template>
     <div class="layout-sidebar" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
         <div class="sidebar-header">
-            <router-link :to="{ name: 'e-commerce' }" class="logo">
-              <span class="app-name">Head Coach 24</span>
-            </router-link>
-<!--            <button class="layout-sidebar-anchor p-link z-2 mb-2" type="button" @click="anchor()"></button>-->
         </div>
         <div class="layout-menu-container">
             <AppMenu />

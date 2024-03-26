@@ -34,22 +34,18 @@
                 }"
         >
             <div class="mt-auto mb-auto">
-                <span class="block text-white text-7xl font-semibold">League<br />Manager <br />2024</span>
+                <span class="block text-white text-7xl font-semibold">General<br />Manager <br />2024</span>
                 <span class="block text-white text-3xl mt-4"
                 >Lorem ipsum dolor sit amet, consectetur<br />
                             adipiscing elit. Donec posuere velit nec enim<br />
                             sodales, nec placerat erat tincidunt.
                         </span>
             </div>
-            <div class="flex align-items-center gap-5">
-<!--                <span class="text-white font-semibold">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>-->
-<!--                <i class="pi pi-github text-3xl p-1 surface-overlay border-circle cursor-pointer"></i>-->
-<!--                <i class="pi pi-twitter text-3xl p-1 surface-overlay border-circle cursor-pointer"></i>-->
-            </div>
+            <div class="flex align-items-center gap-5"></div>
         </div>
     </div>
 
-    <Dialog v-model:visible="coachDialog" :style="{width: '800px'}" header="New Coach Details" :modal="true" class="p-fluid">
+    <Dialog v-model:visible="coachDialog" :style="{width: '800px'}" header="New Coach Details" :modal="true" :draggable="false" :closable="false" class="p-fluid">
         <div class='formgrid grid'>
             <div class="field col">
                 <label >First Name</label>
@@ -97,22 +93,13 @@
             </div>
         </div>
 
-<!--        <div class="col-12">-->
-<!--            <div class="card">-->
-<!--                <h5>Team Selection</h5>-->
-<!--                <TreeTable :value="treeTableValue" selectionMode="checkbox" v-model:selectionKeys="selectedTreeTableValue">-->
-<!--                    <Column field="name" header="Name" :expander="true"></Column>-->
-<!--                </TreeTable>-->
-<!--            </div>-->
-<!--        </div>-->
-
         <template #footer>
             <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog"/>
             <Button label="Create" icon="pi pi-check" class="p-button-text" @click="createNewCareer" />
         </template>
     </Dialog>
 
-    <Dialog v-model:visible="continueDialog" :style="{width: '800px'}" header="Continue previous save..." close-icon="false" :modal="true" class="p-fluid bg-white">
+    <Dialog v-model:visible="continueDialog" :style="{width: '800px'}" header="Continue previous save..." close-icon="false" :draggable="false" :closable="false" :modal="true" class="p-fluid bg-white">
         <div class="row">
             <div class="col-md-2">
             </div>
@@ -147,7 +134,7 @@
         </div>
     </Dialog>
 
-    <Dialog v-model:visible="loadingDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
+    <Dialog v-model:visible="loadingDialog" :style="{width: '800px'}" :draggable="false" :closable="false" :modal="true" class='p-fluid bg-white'>
         <div class="justify-content-center">
             <h5>Loading...</h5>
             <div class="grid">
@@ -161,7 +148,6 @@
 
 <script>
 import {
-    UserController,
     TeamController,
     WorldController,
     CareerController
@@ -169,6 +155,7 @@ import {
 import DatabaseController from "../../controllers/DatabaseController";
 import moment from "moment/moment";
 import { NodeService } from '@/service/NodeService';
+// import { Dialog, ProgressBar } from 'primevue/dialog';
 
 export default {
     data() {
@@ -210,7 +197,6 @@ export default {
                 { value: 1, skill: "Staff Builder" },
                 { value: 2, skill: "Youth Specialist" },
             ],
-            userController: null,
             worldController: null,
             leagueController: null,
             teamController: null,
@@ -219,7 +205,6 @@ export default {
         }
     },
     created() {
-        this.userController = new UserController()
         this.teamController = new TeamController()
         this.careerController = new CareerController()
         this.worldController = new WorldController()
@@ -241,167 +226,181 @@ export default {
         }
     },
     methods: {
-      async getDefaultTeamsLeagues() {
-        const data = await this.databaseController.initDefaultDatabase();
-        this.leagues = data.leagues;
-        this.teams = data.teams;
-        this.players = data.players
-        this.treeTableValue = this.assignTeamsToLeagues(this.leagues, this.teams, this.players)
-        const obj = this
-        this.databases = await this.databaseController.getAllDatabases();
-        const index = this.databases.indexOf('default')
-        obj.databases.splice(index,1)
-      },
-      assignTeamsToLeagues(leagues, teams, players) {
+        async getDefaultTeamsLeagues() {
+            const data = await this.databaseController.initDefaultDatabase();
+            console.log(data);
+            this.leagues = data.leagues;
+            this.teams = data.teams;
+            this.players = data.players
+            this.treeTableValue = this.assignTeamsToLeagues(this.leagues, this.teams, this.players)
+            const obj = this
+            this.databases = await this.databaseController.getAllDatabases();
+            const index = this.databases.indexOf('default')
+            obj.databases.splice(index,1)
+        },
+        assignTeamsToLeagues(leagues, teams, players) {
         // This will hold our transformed data
-        let leagueTree = [];
+            let leagueTree = [];
 
-        for (let league of leagues) {
-          let leagueTeams = teams.filter(team => team.lid === league.id);
-          for (let team of leagueTeams) {
-            league.teams.push(team);
-            let teamPlayers = players.filter(player => player.team_id === team.id);
-            for (let player of teamPlayers) {
-              team.players.push(player);
+            for (let league of leagues) {
+                let leagueTeams = teams.filter(team => team.lid === league.id);
+                for (let team of leagueTeams) {
+                league.teams.push(team);
+                let teamPlayers = players.filter(player => player.team_id === team.id);
+                for (let player of teamPlayers) {
+                    team.players.push(player);
+                }
+                }
             }
-          }
+
+            for (let league of leagues) {
+                // Find the teams for the current league
+                let leagueTeams = teams.filter(team => team.lid === league.id);
+
+                // Transform the leagueTeams into the required format
+                let children = leagueTeams.map(team => {
+                // Find the players for the current team
+                let teamPlayers = players.filter(player => player.team_id === team.id);
+
+                // Transform the teamPlayers into the required format
+                let playerChildren = teamPlayers.map(player => ({
+                    key: `${team.lid}-${team.id}-${player.id}`,
+                    data: player,
+                }));
+
+                return {
+                    key: `${team.lid}-${team.id}`,
+                    data: team,
+                    children: playerChildren, // Add the players as children of the team
+                };
+                });
+
+                // Transform the league into the required format, including its teams
+                let leagueNode = {
+                key: String(league.id),
+                data: league,
+                children,
+                };
+
+                // Add the transformed league to our result array
+                leagueTree.push(leagueNode);
+            }
+
+            return leagueTree;
+        },
+        async loadSelectedCareer(name) {
+            let obj = this
+            let db_name = name;
+            obj.loading = true
+            obj.restartTimer();
+
+            console.log("DB: " + db_name)
+            this.careerController.loadSelectedCareer(db_name);
+        },
+        createNewCareer() {
+            let obj = this
+            obj.coachDialog = false
+            obj.loadingDialog = true;
+            obj.creating = true
+
+            let create_user = {
+            id: 0,
+            first: obj.first_name,
+            last: obj.last_name,
+            age: obj.age,
+            exp: obj.exp.label,
+            skill: obj.skill.skill,
+            team_id: obj.team.id,
+            }
+
+            obj.restartTimer();
+            setTimeout(() => {
+                obj.databaseController.createNewDatabase(create_user)
+            }, 2000);
+        },
+        closeApp() {
+            console.log("Close App")
+            window.ipcRenderer.send('quit-app');
+        },
+        openNew() {
+            this.coach = {};
+            this.submitted = false;
+            this.coachDialog = true;
+        },
+        openContinue() {
+            this.coach = {};
+
+            this.submitted = false;
+            this.continueDialog = true;
+        },
+        hideDialog() {
+            console.log("Hide Dialog")
+            this.coachDialog = false;
+            this.continueDialog = false;
+            this.loadingDialog = false;
+            this.submitted = false;
+
+            if(this.loading) {
+            console.log("Loading")
+            this.$router.push('/home')
+            this.loading = false
+            }
+
+            if(this.creating) {
+            console.log("Creating")
+            this.$router.push('/home')
+            this.creating = false
+            }
+
+            if(this.deleting) {
+            console.log("Deleting")
+            this.$router.push('/')
+            this.deleting = false
+            }
+        },
+        async startProgressAndLongRunningFunction() {
+                // Start the progress bar
+                this.restartTimer();
+
+                // Start the long-running function
+                const longRunningFunctionPromise = this.longRunningFunction();
+
+                // Wait for the long-running function to complete
+                await longRunningFunctionPromise;
+
+                // Stop the progress bar
+                // this.endProgress();
+            },
+        restartTimer() {
+            clearInterval(this.interval);
+            this.value1 = 0;
+            setTimeout(() => {
+                this.startProgress();
+            }, 100);
+        },
+        startProgress() {
+            this.continueDialog = false
+            this.coachDialog = false
+            this.loadingDialog = true
+            this.interval = setInterval(() => {
+                let newValue = this.value1 + Math.floor(Math.random() * 10) + 1;
+                this.value1 = newValue;
+                console.log(this.value1);
+            }, 500);
+        },
+        endProgress() {
+            clearInterval(this.interval);
+            this.interval = null;
+            setTimeout(() => {
+                this.hideDialog()
+            }, 500);
+        },
+        deleteSelectedCareer(db) {
+            let obj = this
+            obj.deleting = true
+            obj.restartTimer();
+            this.careerController.delete(db);
         }
-
-        for (let league of leagues) {
-          // Find the teams for the current league
-          let leagueTeams = teams.filter(team => team.lid === league.id);
-
-          // Transform the leagueTeams into the required format
-          let children = leagueTeams.map(team => {
-            // Find the players for the current team
-            let teamPlayers = players.filter(player => player.team_id === team.id);
-
-            // Transform the teamPlayers into the required format
-            let playerChildren = teamPlayers.map(player => ({
-              key: `${team.lid}-${team.id}-${player.id}`,
-              data: player,
-            }));
-
-            return {
-              key: `${team.lid}-${team.id}`,
-              data: team,
-              children: playerChildren, // Add the players as children of the team
-            };
-          });
-
-          // Transform the league into the required format, including its teams
-          let leagueNode = {
-            key: String(league.id),
-            data: league,
-            children,
-          };
-
-          // Add the transformed league to our result array
-          leagueTree.push(leagueNode);
-        }
-
-        return leagueTree;
-      },
-      async loadSelectedCareer(name) {
-          let obj = this
-          let db_name = name;
-          obj.loading = true
-          obj.restartTimer();
-
-          console.log("DB: " + db_name)
-          this.careerController.loadSelectedCareer(db_name);
-      },
-      createNewCareer() {
-        let obj = this
-        obj.coachDialog = false
-        obj.loadingDialog = true;
-        obj.creating = true
-
-        let create_user = {
-          id: 0,
-          first: obj.first_name,
-          last: obj.last_name,
-          age: obj.age,
-          exp: obj.exp.label,
-          skill: obj.skill.skill,
-          team_id: obj.team.id,
-        }
-
-        obj.restartTimer();
-        setTimeout(() => {
-          obj.databaseController.createNewDatabase(create_user)
-        }, 2000);
-      },
-      closeApp() {
-        console.log("Close App")
-        window.ipcRenderer.send('quit-app');
-      },
-      openNew() {
-        this.coach = {};
-        this.submitted = false;
-        this.coachDialog = true;
-      },
-      openContinue() {
-        this.coach = {};
-
-        this.submitted = false;
-        this.continueDialog = true;
-      },
-      hideDialog() {
-        console.log("Hide Dialog")
-        this.coachDialog = false;
-        this.continueDialog = false;
-        this.loadingDialog = false;
-        this.submitted = false;
-
-        if(this.loading) {
-          console.log("Loading")
-          this.$router.push('/home')
-          this.loading = false
-        }
-
-        if(this.creating) {
-          console.log("Creating")
-          this.$router.push('/home')
-          this.creating = false
-        }
-
-        if(this.deleting) {
-          console.log("Deleting")
-          this.$router.push('/')
-          this.deleting = false
-        }
-      },
-      restartTimer() {
-          clearInterval(this.interval);
-          this.value1 = 0;
-          setTimeout(() => {
-              this.startProgress();
-          }, 100);
-      },
-      startProgress() {
-          this.continueDialog = false
-          this.coachDialog = false
-          this.loadingDialog = true
-          this.interval = setInterval(() => {
-              let newValue = this.value1 + Math.floor(Math.random() * 10) + 1;
-              this.value1 = newValue;
-              console.log(this.value1);
-          }, 500);
-      },
-      endProgress() {
-          clearInterval(this.interval);
-          this.interval = null;
-          setTimeout(() => {
-              this.hideDialog()
-          }, 500);
-      },
-      deleteSelectedCareer(db) {
-          let obj = this
-          obj.deleting = true
-          obj.restartTimer();
-          this.careerController.delete(db);
-      }
     }
 }
 </script>

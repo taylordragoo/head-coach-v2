@@ -94,7 +94,7 @@ import '@/assets/styles.scss';
 import {StoreController} from "./controllers";
 import moment from "moment";
 
-const app: App<Element> = createApp(App);
+const app = createApp(App);
 
 app.use(PrimeVue, { ripple: true });
 app.use(ConfirmationService);
@@ -188,7 +188,7 @@ app.component('TreeTable', TreeTable);
 app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('BlockViewer', BlockViewer);
 
-const storeController: StoreController = StoreController.getInstance();
+const storeController = StoreController.getInstance();
 const store = storeController.getStore()
 app.use(store);
 

@@ -1,5 +1,6 @@
 import { PlayerController } from '@/controllers/index';
 import TeamService from '@/service/TeamService';
+import team_data from '@/data/teams.json';
 
 export default class TeamController {
     private static instance: TeamController;
@@ -19,34 +20,21 @@ export default class TeamController {
         return TeamController.instance;
     }
 
-    create(lid) {
-        let nextTeamId = 1
-        let nextPlayerId = 1
+    create() {
+        this.teamService.handleCreateNewTeams(team_data.teams)
+        this.playerController.create();
 
-        for(let k = 1; k < 31; k++) {
-            for(let i = 0; i < 10; i++) {
-
-                const teamId = nextTeamId++
-                this.teamService.handleCreateNewTeam(k, teamId)
-
-                // Generate unique player IDs
-                for(let j = 0; j < 10; j++) {
-                    const playerId = nextPlayerId++
-                    this.playerController.create(playerId, teamId)
-                }
-            }
-        }
     }
 
-    read(obj) {
+    read() {
         this.teamService.handleGetDefaultTeams();
     }
 
-    update(obj) {
+    update() {
 
     }
 
-    delete(obj) {
+    delete() {
 
     }
 }

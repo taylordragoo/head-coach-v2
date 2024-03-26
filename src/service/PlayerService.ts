@@ -1,5 +1,7 @@
 import Player from '@/models/Player';
 import faker from 'faker';
+import data from '@/data/colleges.json';
+import players from '@/data/players.json';
 
 export default class PlayerService {
     private static instance: PlayerService;
@@ -14,78 +16,118 @@ export default class PlayerService {
         return PlayerService.instance;
     }
 
-    handleCreatePlayers(pid, tid) {
-        const p = this.handleGeneratePlayer(pid, tid)
-        Player.insert({
-            data: p
+    handleCreatePlayers() {
+        const _players = players.players.map(player => {
+            return this.handleGeneratePlayer(player);
         })
 
-        console.log("Player Created");
+        console.log(_players);
+
+        Player.insert({
+            data: _players
+        })
     }
 
-    handleGeneratePlayer(pid, tid) {
-        const player = new Player();
-
-        player.id = pid;
-        player.team_id = tid;
-        player.statsTids = [player.tid];
-        player.languages = [faker.address.country()];
-        player.firstName = faker.name.firstName();
-        player.lastName = faker.name.lastName();
-        player.userID = faker.internet.userName(player.firstName, player.lastName);
-        player.born = {
-            year: faker.date.past(30).getFullYear(),
-            country: faker.address.country(),
-            loc: faker.address.countryCode(),
-            maleFemale: faker.random.arrayElement(['Male', 'Female'])
+    handleGeneratePlayer(p) {
+        let college = data.colleges.find(college => college.region === p.college) || data.colleges[0];
+        return {
+            id: p.pid,
+            pid: p.pid,
+            team_id: p.tid,
+            first_name: faker.name.firstName(),
+            last_name: faker.name.lastName(),
+            height: p.hgt,
+            weight: p.weight,
+            value: p.value,
+            value_no_pot: p.valueNoPot,
+            value_fuzz: p.valueFuzz,
+            value_no_pot_fuzz: p.valueNoPotFuzz,
+            health: {
+                pid: p.pid,
+                status: p.injury.type
+            },
+            born: {
+                pid: p.pid,
+                year: p.born.year,
+                location: p.born.loc
+            },
+            college_id: college.tid,
+            contract: {
+                pid: p.pid,
+                amount: p.contract.amount,
+                expires: p.contract.exp
+            },
+            draft: {
+                pid: p.pid,
+                round: p.draft.round,
+                pick: p.draft.pick,
+                tid: p.draft.tid,
+                year: p.draft.year,
+                pot: p.draft.pot,
+                ovr: p.draft.ovr,
+                skills: p.draft.skills
+            },
+            ratings: {
+                pid: p.pid,
+                position: p.ratings[0].pos,
+                strength: p.ratings[0].stre,
+                speed: p.ratings[0].spd,
+                agility: p.ratings[0].elu,
+                acceleration: p.ratings[0].rtr,
+                throw_power: p.ratings[0].thp,
+                throw_accuracy_short: p.ratings[0].tha,
+                throw_accuracy_mid: p.ratings[0].tha,
+                throw_accuracy_deep: p.ratings[0].tha,
+                throw_on_the_run: p.ratings[0].thv,
+                play_action: p.ratings[0].thv,
+                carrying: p.ratings[0].bsc,
+                catching: p.ratings[0].hnd,
+                route_running: p.ratings[0].hnd,
+                release: p.ratings[0].hnd,
+                run_blocking: p.ratings[0].rbk,
+                pass_blocking: p.ratings[0].pbk,
+                tackle: p.ratings[0].tck,
+                pass_coverage: p.ratings[0].pcv,
+                press: p.ratings[0].prs,
+                run_stop: p.ratings[0].rns,
+                kick_power: p.ratings[0].kpw,
+                kick_accuracy: p.ratings[0].kac,
+                punt_power: p.ratings[0].ppw,
+                punt_accuracy: p.ratings[0].pac,
+                stamina: p.ratings[0].endu,
+                fuzz: p.ratings[0].fuzz,
+                overall: p.ratings[0].ovr,
+                potential: p.ratings[0].pot,
+                overalls: {
+                    QB: p.ratings[0].ovrs.QB,
+                    RB: p.ratings[0].ovrs.RB,
+                    WR: p.ratings[0].ovrs.WR,
+                    TE: p.ratings[0].ovrs.TE,
+                    OL: p.ratings[0].ovrs.OL,
+                    DL: p.ratings[0].ovrs.DL,
+                    LB: p.ratings[0].ovrs.LB,
+                    CB: p.ratings[0].ovrs.CB,
+                    S: p.ratings[0].ovrs.S,
+                    K: p.ratings[0].ovrs.K,
+                    P: p.ratings[0].ovrs.P
+                },
+                potentials: {
+                    QB: p.ratings[0].pots.QB,
+                    RB: p.ratings[0].pots.RB,
+                    WR: p.ratings[0].pots.WR,
+                    TE: p.ratings[0].pots.TE,
+                    OL: p.ratings[0].pots.OL,
+                    DL: p.ratings[0].pots.DL,
+                    LB: p.ratings[0].pots.LB,
+                    CB: p.ratings[0].pots.CB,
+                    S: p.ratings[0].pots.S,
+                    K: p.ratings[0].pots.K,
+                    P: p.ratings[0].pots.P
+                }
+            },
+            salaries: p.salaries,
+            awards: [],
+            injuries: []
         };
-        player.ratings = [{
-            fuzz: faker.random.number({ min: 1, max: 5, precision: 0.01 }),
-            ovr: faker.datatype.number({ min: 1, max: 20 }),
-            pos: faker.random.arrayElement(['TOP', 'JGL', 'MID', 'ADC', 'SUP']),
-            pot: faker.datatype.number({ min: 1, max: 20 }),
-            season: faker.date.recent().getFullYear(),
-            seasonSplit: faker.random.arrayElement(['Spring', 'Summer']),
-            region: faker.random.arrayElement(['BR', 'NA', 'EU', 'KR', 'CN']),
-            MMR: faker.datatype.number({ min: 2000, max: 3000 }),
-            rank: faker.random.arrayElement(['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Master', 'Grandmaster', 'Challenger']),
-            oldOVR: faker.datatype.boolean()
-        }];
-        player.champions = Array.from({ length: 10 }, () => faker.datatype.number({ min: 1, max: 20 }));
-        player.pos = faker.random.arrayElement(['TOP', 'JGL', 'MID', 'ADC', 'SUP']);
-        player.hgt = faker.datatype.number({ min: 60, max: 84 });
-        player.weight = faker.datatype.number({ min: 100, max: 300 });
-        player.college = faker.random.arrayElement(['Harvard University', 'Stanford University', 'Massachusetts Institute of Technology', 'California Institute of Technology']);
-        player.awards = [];
-        player.yearsFreeAgent = 0;
-        player.retiredYear = null;
-        player.injury = {
-            type: faker.random.arrayElement(['Healthy', 'Day-to-Day', 'Out for Season']),
-            gamesRemaining: faker.datatype.number({ min: 0, max: 82 })
-        };
-        player.ptModifier = faker.random.number({ min: 0.5, max: 1.5, precision: 0.01 });
-        player.pick = 0;
-        player.ban = 0;
-        player.hof = faker.datatype.boolean();
-        player.watch = faker.datatype.boolean();
-        player.gamesUntilTradable = 0;
-        player.value = faker.random.number({ min: 40, max: 60, precision: 0.01 });
-        player.valueNoPot = faker.datatype.number({ min: 1, max: 100 });
-        player.valueMMR = faker.datatype.number({ min: 2000, max: 3000 });
-        player.valueFuzz = faker.random.number({ min: 40, max: 60, precision: 0.01 });
-        player.valueNoPotFuzz = faker.datatype.number({ min: 1, max: 100 });
-        player.valueWithContract = player.value;
-        player.salaries = [];
-        player.contract = {
-            amount: faker.random.number({ min: 10000, max: 1000000 }),
-            exp: faker.date.future().getFullYear()
-        };
-        player.diedYear = null;
-
-        return player;
-    }
-
-    handleConvertRating(value) {
-        return Math.ceil(value / 5);
     }
 }

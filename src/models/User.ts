@@ -1,6 +1,8 @@
 import { Model } from '@vuex-orm/core'
 import Team from '@/models/Team'
 import World from '@/models/World';
+import Mail from '@/models/Mail';
+import Contract from '@/models/Contract';
 
 export default class User extends Model {
     static entity = 'user'
@@ -15,7 +17,9 @@ export default class User extends Model {
             skill: this.string(''),
             team: this.belongsTo(Team, 'team_id'),
             team_id: this.attr(''),
-            world: this.hasOne(World, 'user_id')
+            world: this.hasOne(World, 'user_id'),
+            mail: this.hasMany(Mail, 'user_id'),
+            contract: this.hasOne(Contract, 'user_id')
         }
     }
 

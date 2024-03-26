@@ -1,11 +1,9 @@
 import {
-    ChampionController,
-    LeagueController
-} from '@/controllers/index';
-import { WorldService } from '@/service/index';
+    WorldService,
+} from '@/service/index';
 
 class WorldController {
-    private static instance: WorldController;
+    public instance: WorldController;
     public worldService: WorldService;
 
     constructor() {

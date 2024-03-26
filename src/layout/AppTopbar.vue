@@ -72,7 +72,7 @@
             </ul>
         </div>
 
-        <Dialog mode='indeterminate' :closable='false' v-model:visible="loadingDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
+        <Dialog mode='indeterminate' :draggable="false" :closable="false" v-model:visible="loadingDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
           <div class="justify-content-center">
             <h5>Loading...</h5>
             <div class="grid">
@@ -82,7 +82,7 @@
             </div>
           </div>
         </Dialog>
-        <Dialog mode='indeterminate' :closable='false' v-model:visible="savingDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
+        <Dialog mode='indeterminate' :draggable="false" :closable="false" v-model:visible="savingDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
           <div class="justify-content-center">
             <h5>Saving...</h5>
             <div class="grid">
@@ -92,7 +92,7 @@
             </div>
           </div>
         </Dialog>
-        <Dialog mode='indeterminate' :closable='false' v-model:visible="exitDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
+        <Dialog mode='indeterminate' :draggable="false" :closable="false" v-model:visible="exitDialog" :style="{width: '800px'}" :modal="true" class='p-fluid bg-white'>
           <div class="justify-content-center">
             <h5>Loading...</h5>
             <div class="grid">
@@ -168,7 +168,7 @@
       world: {
         /* By default get() is used */
         get() {
-          return World.query().with('leagues.teams.players').first()
+          return World.query().with('leagues.teams.players.*').first()
         },
         /* We add a setter */
         set(value) {
@@ -186,8 +186,8 @@
         }
       },
       league_phase() {
-        const league = League.query().where('id', this.user.team.lid).first();
-        return league.phase_name;
+        const league = League.query().where('id', this.user?.team?.lid).first();
+        return league?.phase_name || 'Unknown';
       },
       teams: {
         /* By default get() is used */
@@ -211,12 +211,27 @@
       },
     },
     methods: {
-      onTopbarContMenuButtonClick(event) {
+      async onTopbarContMenuButtonClick(event) {
         let obj = this
         obj.continuing = true;
-        this.continueToTomorrow(this.world.date);
-        this.careerController.continueCareer();
         obj.openContinue();
+        await this.$nextTick(); // Wait for the next DOM update cycle
+        this.continueToTomorrow(this.world.date);
+        setTimeout(() => {
+            this.careerController.continueCareer();
+        }, 500);
+        setTimeout(() => {
+            this.careerController.continueCareer();
+        }, 1000);
+        setTimeout(() => {
+            this.careerController.continueCareer();
+        }, 2000);
+        setTimeout(() => {
+            this.careerController.continueCareer();
+        }, 3000);
+        setTimeout(() => {
+            this.careerController.continueCareer();
+        }, 4000);
       },
       onTopbarExitMenuButtonClick(event) {
         let obj = this
@@ -280,7 +295,6 @@
         const players = Player.query().where('tid', 0).get();
         console.log(players);
 
-        // this.continueToTomorrow(this.world.date);
         this.restartTimer();
       },
       openSave() {

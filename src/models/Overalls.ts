@@ -2,10 +2,11 @@ import { Model } from '@vuex-orm/core'
 
 export default class Overalls extends Model {
     static entity = 'overalls'
+
     static fields () {
         return {
             id: this.uid(),
-            pid: this.attr(null),
+            rating_id: this.attr(null),
             QB: this.number(null),
             RB: this.number(null),
             WR: this.number(null),
@@ -16,9 +17,7 @@ export default class Overalls extends Model {
             CB: this.number(null),
             S: this.number(null),
             K: this.number(null),
-            P: this.number(null),
-            KR: this.number(null),
-            PR: this.number(null)
+            P: this.number(null)
         }
     }
 }

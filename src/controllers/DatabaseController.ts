@@ -1,5 +1,6 @@
 import DatabaseService from '@/service/DatabaseService';
 import CareerController from "@/controllers/CareerController";
+import Dexie from "dexie";
 
 class DatabaseController {
     private static instance: DatabaseController;

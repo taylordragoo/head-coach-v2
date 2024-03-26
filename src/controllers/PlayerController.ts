@@ -16,8 +16,8 @@ export default class PlayerController {
         return PlayerController.instance;
     }
 
-    create(pid, tid) {
-        this.playerService.handleCreatePlayers(pid ,tid)
+    create() {
+        this.playerService.handleCreatePlayers()
     }
 
 }

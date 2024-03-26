@@ -1,11 +1,11 @@
-import { CareerService } from '@/service/index';
-import DatabaseController from "@/controllers/DatabaseController";
+import { CareerService } from '../service/index';
+import DatabaseController from "./DatabaseController";
 
 class CareerController {
     private static instance: CareerController;
     private careerService: CareerService;
 
-    private constructor() {
+    public constructor() {
         this.careerService = CareerService.getInstance();
     }
 
@@ -26,20 +26,11 @@ class CareerController {
         return this.careerService.handleLoadSelectedCareer(name);
     }
 
-    public insertVuexData: any = (request) => {
-        this.careerService.handleInsertVuexData(request);
-    }
-
-    public createNewCareer: any = (request) => {
-        this.careerService.handleCreateNewWorld(request);
-        this.setPhaseBasedOnWeek();
-    }
-
     public saveCareer: any = () => {
         this.careerService.handleSaveCareer();
     }
 
-    public continueCareer(): any {
+    public async continueCareer(): Promise<any> {
         this.careerService.handleContinueCareer();
     }
 

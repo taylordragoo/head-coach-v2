@@ -1,14 +1,13 @@
 import World from '@/models/World';
-import ChampionController from "@/controllers/ChampionController";
+import College from "@/models/College";
 import LeagueController from "@/controllers/LeagueController";
+import data from '@/data/colleges.json';
 
 export default class WorldService {
     private static instance: WorldService;
-    private championController: ChampionController;
     private leagueController: LeagueController;
 
     private constructor() {
-        this.championController = ChampionController.getInstance();
         this.leagueController = LeagueController.getInstance();
     }
 
@@ -21,17 +20,22 @@ export default class WorldService {
     }
 
     handleCreateNewWorld() {
+        for(let i = 0; i < data.colleges.length; i++) {
+            College.insert({
+                data: data.colleges[i]
+            });
+        }
+
         World.insert({
             data: {
                 id: 0,
                 user_id: 0,
-                date: '01/01/2023',
-                phase: 1,
-                season: 2023
+                date: '02/11/2024',
+                phase: 0,
+                season: 2024
             }
-        })
+        });
 
-        this.championController.createDefaultChampions();
         this.leagueController.createDefaultLeagues();
 
         return;
