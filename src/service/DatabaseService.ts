@@ -61,15 +61,41 @@ class DatabaseService {
         activities: Activity,
         conference: Conference,
         division: Division,
-        Season: Season,
+        season: Season,
         staff: Staff,
         leagues: League,
         world: World,
     }
 
+    public tableNames: string[] = [
+        'user',
+        'world',
+        'players',
+        'teams',
+        'leagues',
+        'matches',
+        'awards',
+        'transactions',
+        'draft',
+        'health',
+        'born',
+        'ratings',
+        'college',
+        'salaries',
+        'stats',
+        'injuries',
+        'contracts',
+        'relatives',
+        'overalls',
+        'potentials',
+        'skills',
+        'phases',
+    ];
+
     private constructor(name: string = 'default') {
         this.dbTemplate = new Dexie(name);
         this.db_name = name;
+        
     }
 
     public static getInstance(name: string): DatabaseService {
@@ -118,7 +144,7 @@ class DatabaseService {
         await this.initDB(this.db);
         await this.copyDB(this.dbTemplate, this.db);
     
-        await User.insert({
+        User.insert({
             data: {
                 id: 0,
                 first: request.first,
@@ -207,7 +233,7 @@ class DatabaseService {
         if (await this.handleDbExistence(name)) {
             const db = new Dexie(name);
             const schema = {};
-            Object.keys(tthis.modelConfig).forEach(tableName => {
+            Object.keys(this.modelConfig).forEach(tableName => {
                 schema[tableName] = 'id';
             });
     
@@ -244,9 +270,9 @@ class DatabaseService {
     }
     
     async populateDB(request) {
+        console.log(request);
         for (const tableName of Object.keys(this.modelConfig)) {
             if (request[tableName] && request[tableName].length > 0) {
-                // Correctly access the table using Dexie's table() method
                 await this.handleBulkPutOperation(this.dbTemplate.table(tableName), request[tableName], tableName);
             }
         }
@@ -305,7 +331,7 @@ class DatabaseService {
 
     async handleBulkPutOperation(db, items, modelName) {
         try {
-            console.log(`Model name: ${modelName}`); // This should log a string representing the table name
+            // console.log(`Model name: ${modelName}`);
             await db.bulkPut(items);
             console.log(`Bulk put operation successful for ${modelName}`);
         } catch (error) {

@@ -509,10 +509,14 @@ const router: Router = createRouter({
 });
 
 const storeService = StoreService.getInstance();
+const store = storeService.getStore();
 
-router.beforeEach(async (to, from, next) => {
-    await storeService.store.restored;
-    next();
-  });  
+const waitForStorageToBeReady = async (to, from, next) => {
+    if(store) {
+        await store.restored
+        next()
+    }
+}
+router.beforeEach(waitForStorageToBeReady)
 
 export default router;

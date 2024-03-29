@@ -118,18 +118,20 @@
                             <InputText id="email3" type="text" disabled/>
                         </div>
                     </div>
-                    <div class="field grid">
-                        <label class="col-12 mb-2 md:col-2 md:mb-0"> </label>
-                        <div class="col-12 md:col-8">
-                            <Button type="button" to='/dashboard' @click='loadSelectedCareer(save)' label="Continue Save" class="mb-2" />
+                    <div class="flex w-full mt-2 mb-2 justify-between">
+                        <div class="flex items-center w-full px-2">
+                            <Button type="button" to='/dashboard' @click='loadSelectedCareer(save)' label="Continue Save" class="mb-2 p-button-primary w-full" />
                         </div>
-                        <div class="col-12 md:col-2">
-                            <Button type="button" to='/dashboard' @click='deleteSelectedCareer(save)' label="Delete" class="mb-2 p-button-danger" />
+                        <div class="flex items-center w-full px-2">
+                            <Button type="button" to='/dashboard' @click='deleteSelectedCareer(save)' label="Delete" class="mb-2 p-button-danger w-full" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
+                <div class="flex px-2">
+                    <Button @click="hideDialog()" label="Cancel" class="p-button-secondary mt-8 mb-2" />
+                </div>
             </div>
         </div>
     </Dialog>
@@ -155,7 +157,6 @@ import {
 import DatabaseController from "../../controllers/DatabaseController";
 import moment from "moment/moment";
 import { NodeService } from '@/service/NodeService';
-// import { Dialog, ProgressBar } from 'primevue/dialog';
 
 export default {
     data() {
@@ -233,10 +234,14 @@ export default {
             this.teams = data.teams;
             this.players = data.players
             this.treeTableValue = this.assignTeamsToLeagues(this.leagues, this.teams, this.players)
+            this.getDatabases();
+        },
+        async getDatabases() {
             const obj = this
             this.databases = await this.databaseController.getAllDatabases();
-            const index = this.databases.indexOf('default')
-            obj.databases.splice(index,1)
+            console.log(this.databases);
+            this.databases = this.databases.filter(db => db !== 'default' && db !== 'localforage' && db !== 'firebaseLocalStorageDb');
+            obj.existing_db_names = obj.databases
         },
         assignTeamsToLeagues(leagues, teams, players) {
         // This will hold our transformed data
@@ -304,13 +309,13 @@ export default {
             obj.creating = true
 
             let create_user = {
-            id: 0,
-            first: obj.first_name,
-            last: obj.last_name,
-            age: obj.age,
-            exp: obj.exp.label,
-            skill: obj.skill.skill,
-            team_id: obj.team.id,
+                id: 0,
+                first: obj.first_name,
+                last: obj.last_name,
+                age: obj.age,
+                exp: obj.exp.label,
+                skill: obj.skill.skill,
+                team_id: obj.team.id,
             }
 
             obj.restartTimer();

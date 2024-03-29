@@ -27,6 +27,8 @@ import Overalls from "@/models/Overalls";
 import Potentials from "@/models/Potentials";
 import Skill from "@/models/Skill";
 import Phase from "@/models/Phase";
+import Season from "@/models/Season";
+import Staff from "@/models/Staff";
 import {Dexie} from "dexie";
 import ITeam from '@/interfaces/ITeam';
 import { DEFAULT_SCHEDULE, PHASE } from "@/data/constants";
@@ -47,11 +49,55 @@ interface RequestData {
     salaries: Salary[];
     overalls: Overalls[];
     potentials: Potentials[];
+    training_schedules: TrainingSchedule[];
+    activities: Activity[];
+    injuries: Injury[];
+    relatives: Relative[];
+    stats: Stat[];
+    transactions: Transaction[];
+    awards: Award[];
+    skills: Skill[];
+    phases: Phase[];
+    conference: Conference[];
+    division: Division[];
+    seasons: Season[];
+    staff: Staff[];
 }
 
 class CareerService {
     private static instance: CareerService;
     private teamService = new TeamService();
+
+    public modelConfig = {
+        user: User,
+        players: Player,
+        teams: Team,
+        matches: Match,
+        awards: Award,
+        transactions: Transaction,
+        draft: Draft,
+        health: Health,
+        born: Born,
+        ratings: Ratings,
+        college: College,
+        salaries: Salary,
+        stats: Stat,
+        injuries: Injury,
+        contracts: Contract,
+        relatives: Relative,
+        overalls: Overalls,
+        potentials: Potentials,
+        skills: Skill,
+        phases: Phase,
+        training_schedules: TrainingSchedule,
+        activities: Activity,
+        conference: Conference,
+        division: Division,
+        season: Season,
+        staff: Staff,
+        leagues: League,
+        world: World,
+    }
 
     public tableNames: string[] = [
         'user',
@@ -103,7 +149,6 @@ class CareerService {
     };
 
     public handleGetDefaultData: any = () => {
-
         const teams: ITeam[] = Team.all().map(team => {
             return {
                 ...team,
@@ -117,35 +162,19 @@ class CareerService {
             };
         });
 
-        return {
+        const defaultData = {
             type: "default",
             db_name: 'default',
-            world: World.all(),
-            players: Player.all(),
             teams: teams,
-            leagues: League.all(),
-            matches: Match.all(),
-            training_schedules: TrainingSchedule.all(),
-            activities: Activity.all(),
-            born: Born.all(),
-            college: College.all(),
-            conference: Conference.all(),
-            division: Division.all(),
-            contracts: Contract.all(),
-            draft: Draft.all(),
-            ratings: Ratings.all(),
-            health: Health.all(),
-            injuries: Injury.all(),
-            relatives: Relative.all(),
-            salaries: Salary.all(),
-            stats: Stat.all(),
-            transactions: Transaction.all(),
-            awards: Award.all(),
-            overalls: Overalls.all(),
-            potentials: Potentials.all(),
-            skills: Skill.all(),
-            phases: Phase.all()
         };
+
+        for (const tableName of Object.keys(this.modelConfig)) {
+            if (tableName !== 'teams' && tableName !== 'season') {
+                defaultData[tableName] = this.modelConfig[tableName].all();
+            }
+        }
+
+        return defaultData;
     }
 
     public async handleLoadSelectedCareer(name: string): Promise<void> {
@@ -161,37 +190,13 @@ class CareerService {
         }
     }
 
-
     public async handleInsertVuexData(request: RequestData): Promise<void>{
         try {
-            // insert data into vuex-orm store
-            await User.insert({ data: request.user })
-            await World.insert({ data: request.world })
-            await League.insert({ data: request.leagues })
-            await Team.insert({ data: request.teams })
-            await Player.insert({ data: request.players })
-            await Match.insert({ data: request.matches })
-            await Born.insert({ data: request.born })
-            await College.insert({ data: request.college })
-            await Contract.insert({ data: request.contracts })
-            await Draft.insert({ data: request.draft })
-            await Ratings.insert({ data: request.ratings })
-            await Health.insert({ data: request.health })
-            await Salary.insert({ data: request.salaries })
-            await Overalls.insert({ data: request.overalls })
-            await Potentials.insert({ data: request.potentials })
-            await TrainingSchedule.insert({ data: request.training_schedules })
-            await Activity.insert({ data: request.activities })
-            await Conference.insert({ data: request.conference })
-            await Division.insert({ data: request.division })
-            await Injury.insert({ data: request.injuries })
-            await Relative.insert({ data: request.relatives })
-            await Stat.insert({ data: request.stats })
-            await Transaction.insert({ data: request.transactions })
-            await Award.insert({ data: request.awards })
-            await Skill.insert({ data: request.skills })
-            await Phase.insert({ data: request.phases })
-
+            for (const tableName of Object.keys(this.modelConfig)) {
+                if (request[tableName] && request[tableName].length > 0) {
+                    await this.modelConfig[tableName].insert({ data: request[tableName] });
+                }
+            }
         } catch (err) {
             console.log(`Error: ${err}`);
         }

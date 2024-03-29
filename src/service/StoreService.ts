@@ -1,6 +1,7 @@
 import VuexORM, { Database } from '@vuex-orm/core';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate'
+import VuexPersistence from 'vuex-persist'
 import User from '@/models/User';
 import World from '@/models/World';
 import League from '@/models/League';
@@ -29,13 +30,8 @@ import Skill from "@/models/Skill";
 import Phase from "@/models/Phase";
 import Season from "@/models/Season";
 import Staff from "@/models/Staff";
-import VuexPersistence from 'vuex-persist';
 import localForage from 'localforage';
-
-const vuexLocal = new VuexPersistence({
-  storage: localForage,
-  asyncStorage: true,
-});
+import {clone} from 'pouchdb-utils';
 
 class StoreService {
     private static instance: StoreService;
@@ -86,13 +82,11 @@ class StoreService {
             },
             plugins: [
                 VuexORM.install(this.database),
-                createPersistedState({
-                    storage: {
-                        getItem: key => localForage.getItem(key),
-                        setItem: (key, value) => localForage.setItem(key, value),
-                        removeItem: key => localForage.removeItem(key),
-                    },
-                })
+                new VuexPersistence({
+                    storage: localForage,
+                    asyncStorage: true,
+                    reducer: (state) => clone(state),
+                }).plugin
             ],
         });
     }

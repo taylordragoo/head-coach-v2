@@ -21,6 +21,7 @@
         "localforage": "^1.10.0",
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
+        "pouchdb-utils": "^8.0.1",
         "primeflex": "^3.3.0",
         "primeicons": "^6.0.1",
         "primevue": "3.28.0",

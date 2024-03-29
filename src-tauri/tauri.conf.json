@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "League Manager 2024",
+    "productName": "Football General Manager",
     "version": "0.1.0"
   },
   "tauri": {
@@ -57,7 +57,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "League Manager 2024",
+        "title": "Football General Manager",
         "width": 800
       }
     ]

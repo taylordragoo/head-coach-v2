@@ -5,7 +5,7 @@
                 <span>{{ league_phase + " | " + user.full_name + " | " + world.currentDayOfWeek + ' ' + world.date }}</span>
             </template>
         </div>
-        <div v-else  class="layout-breadcrumb viewname" style="text-transform: uppercase"></div>
+        <!-- <div v-else  class="layout-breadcrumb viewname" style="text-transform: uppercase"></div> -->
         <div class="topbar-left">
             <span class="topbar-separator"></span>
         </div>
@@ -158,7 +158,7 @@
       user: {
         /* By default get() is used */
         get() {
-          return User.query().with('team.league.players').first()
+          return User.query().with('team.players').first()
         },
         /* We add a setter */
         set(value) {
@@ -293,7 +293,6 @@
       openContinue() {
         this.loadingDialog = true;
         const players = Player.query().where('tid', 0).get();
-        console.log(players);
 
         this.restartTimer();
       },
