@@ -23,6 +23,18 @@ export default class User extends Model {
         }
     }
 
+    id!: number
+    first!: string
+    last!: string
+    age!: number
+    exp!: string
+    skill!: string
+    team!: Team
+    team_id!: number
+    world!: World
+    mail!: Mail
+    contract!: Contract
+
     get full_name () {
         return `${this.first} ${this.last}`
     }
@@ -32,6 +44,6 @@ export default class User extends Model {
     }
 
     get team_league() {
-        return this.team_obj.league;
+        return this.team_obj?.league;
     }
 }

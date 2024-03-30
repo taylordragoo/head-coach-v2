@@ -55,9 +55,56 @@ export default class Team extends Model {
             oline_coach: this.hasOne(Staff, 'tid'),
             dline_coach: this.hasOne(Staff, 'tid'),
             linebacker_coach: this.hasOne(Staff, 'tid'),
-            secondary_doache: this.hasOne(Staff, 'tid'),
+            secondary_coach: this.hasOne(Staff, 'tid'),
             st_coach: this.hasOne(Staff, 'tid'),
             coach: this.hasOne(Staff, 'tid'),
         };
     }
+
+    id!: number
+    tid!: number
+    lid!: number
+    cid!: number
+    name!: string | null
+    img_url!: string | null
+    abbreviation!: string | null
+    country!: string | null
+    population!: number | null
+    stadium_capacity!: number | null
+    retired_numbers!: string | null
+    budget!: {
+        scouting: {
+            amount: number | null
+            rank: number | null
+        },
+        defense: {
+            amount: number | null
+            rank: number | null
+        },
+        health: {
+            amount: number | null
+            rank: number | null
+        },
+        facilities: {
+            amount: number | null
+            rank: number | null
+        },
+    }
+    strategy!: string | null
+    seasons!: Season[] | null
+    stats!: Stat[] | null
+    players!: Player[]
+    league!: League
+    head_coach!: Staff | null
+    offensive_coordinator!: Staff | null
+    defensive_coordinator!: Staff | null
+    qb_coach!: Staff | null
+    rb_coach!: Staff | null
+    wr_coach!: Staff | null
+    te_coach!: Staff | null
+    oline_coach!: Staff | null
+    dline_coach!: Staff | null
+    secondary_coach!: Staff | null
+    st_coach!: Staff | null
+    coach!: Staff | null
 }

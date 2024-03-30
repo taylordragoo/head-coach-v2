@@ -1,12 +1,12 @@
 import Team from '@/interfaces/ITeam';
 
 export default interface ILeague {
-    id: number
-    abbrev: string
-    name: string
-    country: string
-    wid: number
-    teams: Team[]
-    phase: number
-    tier: number
+    id: number | null
+    abbrev: string | null
+    name: string | null
+    country: string | null
+    wid: number | null
+    teams: Team[] | null
+    phase: number | null
+    tier: number | null
 }

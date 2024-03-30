@@ -1,3 +1,4 @@
+import {Dexie} from "dexie";
 import DatabaseController from "@/controllers/DatabaseController";
 import WorldController from "@/controllers/WorldController";
 import TeamService from "@/service/TeamService";
@@ -29,8 +30,6 @@ import Skill from "@/models/Skill";
 import Phase from "@/models/Phase";
 import Season from "@/models/Season";
 import Staff from "@/models/Staff";
-import {Dexie} from "dexie";
-import ITeam from '@/interfaces/ITeam';
 import { DEFAULT_SCHEDULE, PHASE } from "@/data/constants";
 
 interface RequestData {
@@ -68,7 +67,7 @@ class CareerService {
     private static instance: CareerService;
     private teamService = new TeamService();
 
-    public modelConfig = {
+    public modelConfig: any = {
         user: User,
         players: Player,
         teams: Team,
@@ -134,12 +133,11 @@ class CareerService {
         return CareerService.instance;
     }
 
-    public async handleCareerData(request: any, db: any): Promise<any> {
+    public async handleCareerData(request: any, db: Dexie): Promise<any> {
         try {
             for (const tableName of this.tableNames) {
                 const table = db.table(tableName);
                 const data = request[tableName];
-                // await this.handleTableOperation(table, data);
             }
         } catch (err) {
             console.log(`Error: ${err}`);
@@ -149,20 +147,21 @@ class CareerService {
     };
 
     public handleGetDefaultData: any = () => {
-        const teams: ITeam[] = Team.all().map(team => {
-            return {
-                ...team,
+        const teams: Team[] = Team.all().map(team => {
+            const newTeam = new Team();
+            Object.assign(newTeam, team, {
                 budget: {
-                    scouting: { ...team.budget.scouting },
-                    coaching: { ...team.budget.coaching },
-                    health: { ...team.budget.health },
-                    facilities: { ...team.budget.facilities },
+                    scouting: { amount: team.budget.scouting.amount, rank: team.budget.scouting.rank },
+                    defense: { amount: team.budget.defense.amount, rank: team.budget.defense.rank },
+                    health: { amount: team.budget.health.amount, rank: team.budget.health.rank },
+                    facilities: { amount: team.budget.facilities.amount, rank: team.budget.facilities.rank },
                 },
                 coach: { ...team.coach },
-            };
+            });
+            return newTeam;
         });
 
-        const defaultData = {
+        const defaultData: any = {
             type: "default",
             db_name: 'default',
             teams: teams,
@@ -190,7 +189,7 @@ class CareerService {
         }
     }
 
-    public async handleInsertVuexData(request: RequestData): Promise<void>{
+    public async handleInsertVuexData(request: any): Promise<void>{
         try {
             for (const tableName of Object.keys(this.modelConfig)) {
                 if (request[tableName] && request[tableName].length > 0) {
@@ -203,15 +202,15 @@ class CareerService {
         return;
     }
 
-    public async handleDeleteCareer(db: Dexie): Promise<void> {
+    public async handleDeleteCareer(db: string): Promise<void> {
         const dbc: DatabaseController = DatabaseController.getInstance();
         await dbc.deleteDatabase(db);
     }
 
     public async handleCreateNewCareer(request: any): Promise<any> {
         const dbc: DatabaseController = DatabaseController.getInstance();
-        if(await this.handleDbExistence(request))
-        return await this.handleCareerData(request, db);
+        if(await dbc.databaseService.handleDbExistence(request))
+        return await this.handleCareerData(request, dbc.databaseService.db);
     }
 
     public async handleSaveCareer(): Promise<void> {

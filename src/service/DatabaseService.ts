@@ -32,8 +32,8 @@ import Staff from "@/models/Staff";
 
 class DatabaseService {
     private static instance: DatabaseService;
-    public db: any;
-    public dbTemplate: any;
+    public db: Dexie;
+    public dbTemplate: Dexie;
     public db_name: string;
 
     public modelConfig = {
@@ -93,6 +93,7 @@ class DatabaseService {
     ];
 
     private constructor(name: string = 'default') {
+        this.db = new Dexie(name);
         this.dbTemplate = new Dexie(name);
         this.db_name = name;
         

@@ -51,4 +51,35 @@ export default class Player extends Model {
             awards: this.hasMany(Award, 'pid'),
         }
     }
+
+    id!: number;
+    pid!: number;
+    team_id!: number;
+    first_name!: string;
+    last_name!: string;
+    img_url!: string;
+    height!: number;
+    weight!: number;
+    college_id!: number;
+    days_until_can_trade!: number;
+    retired_year!: number;
+    roster_order!: number;
+    years_free_agent!: number;
+    value!: number;
+    value_no_pot!: number;
+    value_fuzz!: number;
+    value_no_pot_fuzz!: number;
+
+    born!: Born;
+    college!: College;
+    contract!: Contract;
+    draft!: Draft;
+    ratings!: Ratings;
+    health!: Health;
+    injuries!: Injury[];
+    relatives!: Relative[];
+    salaries!: Salary[];
+    stats!: Stat[];
+    transactions!: Transaction[];
+    awards!: Award[];
 }

@@ -158,7 +158,7 @@
       user: {
         /* By default get() is used */
         get() {
-          return User.query().with('team.players').first()
+          return User.query().with('team.players.*').first()
         },
         /* We add a setter */
         set(value) {
@@ -220,18 +220,6 @@
         setTimeout(() => {
             this.careerController.continueCareer();
         }, 500);
-        setTimeout(() => {
-            this.careerController.continueCareer();
-        }, 1000);
-        setTimeout(() => {
-            this.careerController.continueCareer();
-        }, 2000);
-        setTimeout(() => {
-            this.careerController.continueCareer();
-        }, 3000);
-        setTimeout(() => {
-            this.careerController.continueCareer();
-        }, 4000);
       },
       onTopbarExitMenuButtonClick(event) {
         let obj = this
