@@ -126,7 +126,7 @@ class DatabaseService {
         const count = await this.dbTemplate.world.count();
         if (count === 0) {
             const data = this.generateData();
-            console.log(data);
+            console.log("Initialize: " + data);
             await this.populateDB(data);
             return data;
         } else {
@@ -158,9 +158,12 @@ class DatabaseService {
         });
     
         for (const [tableName, model] of Object.entries(this.modelConfig)) {
+            console.log("New Game: " + tableName);
             const data = await this.db.table(tableName).toArray();
             await model.insert({ data });
         }
+
+        await this.handleSaveCareer();
     
         await this.handleCloseDatabase(this.dbTemplate);
     }
@@ -168,6 +171,7 @@ class DatabaseService {
     async initDB(db) {
         const schema = {};
         Object.keys(this.modelConfig).forEach(modelName => {
+            console.log("Init DB: " + modelName);
             schema[modelName] = 'id';
         });
     
@@ -179,6 +183,7 @@ class DatabaseService {
 
     async copyDB(dbFrom, dbTo) {
         for (const tableName of Object.keys(this.modelConfig)) {
+            console.log("Copy DB: " + tableName);
             const data = await dbFrom.table(tableName).toArray();
             await this.handleBulkPutOperation(dbTo[tableName], data, tableName);
         }
@@ -260,6 +265,7 @@ class DatabaseService {
             const careerData = {};
     
             for (const tableName of Object.keys(this.modelConfig)) {
+                console.log("Get Career Data: " + tableName);
                 const data = await db.table(tableName).toArray();
                 careerData[tableName] = data;
             }
@@ -273,6 +279,7 @@ class DatabaseService {
     async populateDB(request) {
         console.log(request);
         for (const tableName of Object.keys(this.modelConfig)) {
+            console.log("Populate DB: " + tableName);
             if (request[tableName] && request[tableName].length > 0) {
                 await this.handleBulkPutOperation(this.dbTemplate.table(tableName), request[tableName], tableName);
             }
@@ -332,7 +339,7 @@ class DatabaseService {
 
     async handleBulkPutOperation(db, items, modelName) {
         try {
-            // console.log(`Model name: ${modelName}`);
+            console.log(`Bulk Put: ${modelName}`);
             await db.bulkPut(items);
             console.log(`Bulk put operation successful for ${modelName}`);
         } catch (error) {

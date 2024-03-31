@@ -152,7 +152,7 @@ class CareerService {
             Object.assign(newTeam, team, {
                 budget: {
                     scouting: { amount: team.budget.scouting.amount, rank: team.budget.scouting.rank },
-                    defense: { amount: team.budget.defense.amount, rank: team.budget.defense.rank },
+                    coaching: { amount: team.budget.coaching.amount, rank: team.budget.coaching.rank },
                     health: { amount: team.budget.health.amount, rank: team.budget.health.rank },
                     facilities: { amount: team.budget.facilities.amount, rank: team.budget.facilities.rank },
                 },

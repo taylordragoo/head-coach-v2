@@ -26,6 +26,8 @@ export default class TeamService {
             return this.handleGenerateTeam(team);
         })
 
+        console.log(_teams);
+
         Team.insert({
             data: _teams
         })
@@ -33,9 +35,9 @@ export default class TeamService {
 
     handleGenerateTeam(data) {
         return {
-            id: data.tid,
+            id: data.tid + 1,
             lid: 1,
-            tid: data.tid,
+            tid: data.tid + 1,
             cid: data.cid,
             did: data.did,
             name: data.name,

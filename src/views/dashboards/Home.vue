@@ -30,9 +30,11 @@ onMounted(() => {
 
     setChartData();
 });
+
 watch(layoutConfig.colorScheme, () => {
     setChartData();
 });
+
 const setChartData = (setValue = true) => {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -127,6 +129,7 @@ const changeDataset = (event: any, index: number) => {
 
     setChartData(false);
 };
+
 const items = ref([
     {
         label: 'Shipments',
@@ -267,9 +270,11 @@ watch(
     },
     { immediate: true }
 );
+
 const formatCurrency = (value: number) => {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 };
+
 const getBadgeSeverity = (status: string) => {
     const stockStatus = {
         OUTOFSTOCK: 'danger',
@@ -279,6 +284,7 @@ const getBadgeSeverity = (status: string) => {
 
     return stockStatus[status];
 };
+
 </script>
 <template>
     <div class="layout-dashboard">

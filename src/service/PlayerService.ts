@@ -33,7 +33,7 @@ export default class PlayerService {
         return {
             id: p.pid,
             pid: p.pid,
-            team_id: p.tid,
+            team_id: p.tid >= 0 ? (p.tid + 1) : p.tid,
             first_name: faker.name.firstName(),
             last_name: faker.name.lastName(),
             height: p.hgt,
@@ -51,7 +51,7 @@ export default class PlayerService {
                 year: p.born.year,
                 location: p.born.loc
             },
-            college_id: college.tid,
+            college_id: 0,
             contract: {
                 pid: p.pid,
                 amount: p.contract.amount,

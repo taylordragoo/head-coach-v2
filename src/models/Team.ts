@@ -77,7 +77,7 @@ export default class Team extends Model {
             amount: number | null
             rank: number | null
         },
-        defense: {
+        coaching: {
             amount: number | null
             rank: number | null
         },
@@ -91,6 +91,7 @@ export default class Team extends Model {
         },
     }
     strategy!: string | null
+    
     seasons!: Season[] | null
     stats!: Stat[] | null
     players!: Player[]

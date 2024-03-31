@@ -47,6 +47,45 @@ class Ratings extends Model {
 			potentials: this.hasOne(Potentials, 'rating_id'),
 		}
 	}
+
+	id!: number
+	pid!: number
+	position!: string
+	acceleration!: number
+	speed!: number
+	agility!: number
+	strength!: number
+	throw_power!: number
+	throw_accuracy_short!: number
+	throw_accuracy_mid!: number
+	throw_accuracy_deep!: number
+	throw_on_the_run!: number
+	play_action!: number
+	carrying!: number
+	catching!: number
+	route_running!: number
+	release!: number
+	vertical!: number
+	run_blocking!: number
+	pass_blocking!: number
+	tackle!: number
+	shed_block!: number
+	run_stop!: number
+	press!: number
+	man_coverage!: number
+	zone_coverage!: number
+	kick_power!: number
+	kick_accuracy!: number
+	punt_power!: number
+	punt_accuracy!: number
+	stamina!: number
+	fuzz!: number
+	overall!: number
+	potential!: number
+
+	skills!: Skill[]
+	overalls!: Overalls
+	potentials!: Potentials
 }
 
 export default Ratings
