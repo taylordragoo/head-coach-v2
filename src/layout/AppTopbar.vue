@@ -114,6 +114,7 @@
   import User from "../models/User";
   import Team from "../models/Team";
   import Player from "../models/Player";
+  import Staff from "../models/Staff";
   import { CareerController } from "../controllers";
 
   export default {
@@ -192,7 +193,7 @@
       teams: {
         /* By default get() is used */
         get() {
-          return Team.query().with('players').orderBy('name').all()
+          return Team.query().withAll().orderBy('name').all()
         },
         /* We add a setter */
         set(value) {
@@ -209,6 +210,16 @@
           this.$store.commit('updatePlayers', value)
         }
       },
+      staff: {
+        /* By default get() is used */
+        get() {
+          return Staff.query().all();
+        },
+        /* We add a setter */
+        set(value) {
+          this.$store.commit('updateStaff', value)
+        }
+      }
     },
     methods: {
       async onTopbarContMenuButtonClick(event) {

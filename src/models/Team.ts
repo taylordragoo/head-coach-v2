@@ -41,23 +41,46 @@ export default class Team extends Model {
                 },
             }),
             strategy: this.attr(''),
+
+            // Data
             seasons: this.hasMany(Season, 'tid'),
             stats: this.hasMany(Stat, 'tid'),
+            
+            // Players
             players: this.hasMany(Player, 'team_id'),
+
+            // League
             league: this.belongsTo(League, 'lid'),
-            head_coach: this.hasOne(Staff, 'tid'),
-            offensive_coordinator: this.hasOne(Staff, 'tid'),
-            defensive_coordinator: this.hasOne(Staff, 'tid'),
-            qb_coach: this.hasOne(Staff, 'tid'),
-            rb_coach: this.hasOne(Staff, 'tid'),
-            wr_coach: this.hasOne(Staff, 'tid'),
-            te_coach: this.hasOne(Staff, 'tid'),
-            oline_coach: this.hasOne(Staff, 'tid'),
-            dline_coach: this.hasOne(Staff, 'tid'),
-            linebacker_coach: this.hasOne(Staff, 'tid'),
-            secondary_coach: this.hasOne(Staff, 'tid'),
-            st_coach: this.hasOne(Staff, 'tid'),
-            coach: this.hasOne(Staff, 'tid'),
+
+            // Coaching Staff
+            head_coach: this.hasOne(Staff, 'team_id'),
+            offensive_coordinator: this.hasOne(Staff, 'team_id'),
+            defensive_coordinator: this.hasOne(Staff, 'team_id'),
+            qb_coach: this.hasOne(Staff, 'team_id'),
+            rb_coach: this.hasOne(Staff, 'team_id'),
+            wr_coach: this.hasOne(Staff, 'team_id'),
+            te_coach: this.hasOne(Staff, 'team_id'),
+            oline_coach: this.hasOne(Staff, 'team_id'),
+            dline_coach: this.hasOne(Staff, 'team_id'),
+            linebacker_coach: this.hasOne(Staff, 'team_id'),
+            secondary_coach: this.hasOne(Staff, 'team_id'),
+            special_teams_coach: this.hasOne(Staff, 'team_id'),
+            strength_coach: this.hasOne(Staff, 'team_id'),
+            coach: this.hasMany(Staff, 'team_id'),
+
+            // Front Office Personnel
+            owner: this.hasOne(Staff, 'team_id'),
+            president: this.hasOne(Staff, 'team_id'),
+            chief_executive_officer: this.hasOne(Staff, 'team_id'),
+            general_manager: this.hasOne(Staff, 'team_id'),
+            director_pro_scouting: this.hasOne(Staff, 'team_id'),
+            director_college_scouting: this.hasOne(Staff, 'team_id'),
+            scout: this.hasMany(Staff, 'team_id'),
+
+            // Sports Medicine
+            sports_medicine_director: this.hasOne(Staff, 'team_id'),
+            doctor: this.hasMany(Staff, 'team_id'),
+            trainer: this.hasMany(Staff, 'team_id'),
         };
     }
 
@@ -91,7 +114,6 @@ export default class Team extends Model {
         },
     }
     strategy!: string | null
-    
     seasons!: Season[] | null
     stats!: Stat[] | null
     players!: Player[]
@@ -106,6 +128,18 @@ export default class Team extends Model {
     oline_coach!: Staff | null
     dline_coach!: Staff | null
     secondary_coach!: Staff | null
-    st_coach!: Staff | null
-    coach!: Staff | null
+    special_teams_coach!: Staff | null
+    strength_coach!: Staff | null
+    coach!: Staff[] | null
+    owner!: Staff | null
+    president!: Staff | null
+    chief_executive_officer!: Staff | null
+    general_manager!: Staff | null
+    director_of_scouting!: Staff | null
+    director_pro_scouting!: Staff | null
+    director_college_scouting!: Staff | null
+    scout!: Staff[] | null
+    sports_medicine_director!: Staff | null
+    physio!: Staff[] | null
+    trainer!: Staff[] | null
 }

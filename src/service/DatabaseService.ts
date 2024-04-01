@@ -29,6 +29,7 @@ import Conference from "@/models/Conference";
 import Division from "@/models/Division";
 import Season from "@/models/Season";
 import Staff from "@/models/Staff";
+import StaffContract from "@/models/StaffContract";
 
 class DatabaseService {
     private static instance: DatabaseService;
@@ -52,6 +53,7 @@ class DatabaseService {
         stats: Stat,
         injuries: Injury,
         contracts: Contract,
+        staff_contracts: StaffContract,
         relatives: Relative,
         overalls: Overalls,
         potentials: Potentials,

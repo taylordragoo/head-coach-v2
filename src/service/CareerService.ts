@@ -30,38 +30,8 @@ import Skill from "@/models/Skill";
 import Phase from "@/models/Phase";
 import Season from "@/models/Season";
 import Staff from "@/models/Staff";
+import StaffContract from "@/models/StaffContract";
 import { DEFAULT_SCHEDULE, PHASE } from "@/data/constants";
-
-interface RequestData {
-    user: User[];
-    world: World[];
-    leagues: League[];
-    teams: Team[];
-    players: Player[];
-    matches: Match[];
-    born: Born[];
-    college: College[];
-    contracts: Contract[];
-    draft: Draft[];
-    ratings: Ratings[];
-    health: Health[];
-    salaries: Salary[];
-    overalls: Overalls[];
-    potentials: Potentials[];
-    training_schedules: TrainingSchedule[];
-    activities: Activity[];
-    injuries: Injury[];
-    relatives: Relative[];
-    stats: Stat[];
-    transactions: Transaction[];
-    awards: Award[];
-    skills: Skill[];
-    phases: Phase[];
-    conference: Conference[];
-    division: Division[];
-    seasons: Season[];
-    staff: Staff[];
-}
 
 class CareerService {
     private static instance: CareerService;
@@ -83,6 +53,7 @@ class CareerService {
         stats: Stat,
         injuries: Injury,
         contracts: Contract,
+        staff_contracts: StaffContract,
         relatives: Relative,
         overalls: Overalls,
         potentials: Potentials,

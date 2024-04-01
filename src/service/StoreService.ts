@@ -30,6 +30,7 @@ import Skill from "@/models/Skill";
 import Phase from "@/models/Phase";
 import Season from "@/models/Season";
 import Staff from "@/models/Staff";
+import StaffContract from '@/models/StaffContract';
 import localForage from 'localforage';
 import {clone} from 'pouchdb-utils';
 
@@ -68,6 +69,7 @@ class StoreService {
         this.database.register(Phase);
         this.database.register(Season);
         this.database.register(Staff);
+        this.database.register(StaffContract);
 
         this.store = new Vuex.Store({
             actions: {

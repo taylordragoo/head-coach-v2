@@ -508,15 +508,15 @@ const router: Router = createRouter({
     },
 });
 
-const storeService = StoreService.getInstance();
-const store = storeService.getStore();
+// const storeService = StoreService.getInstance();
+// const store = storeService.getStore();
 
-const waitForStorageToBeReady = async (to, from, next) => {
-    if(store) {
-        await store.restored
-        next()
-    }
-}
-router.beforeEach(waitForStorageToBeReady)
+// const waitForStorageToBeReady = async (to, from, next) => {
+//     if(store) {
+//         await store.restored
+//         next()
+//     }
+// }
+// router.beforeEach(waitForStorageToBeReady)
 
 export default router;
