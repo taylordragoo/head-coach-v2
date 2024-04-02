@@ -23,6 +23,16 @@ const model = ref([
                 icon: 'pi pi-fw pi-inbox',
                 to: '/apps/mail/inbox',
             },
+            {
+                label: 'Roster',
+                icon: 'pi pi-fw pi-users',
+                to: '/apps/roster',
+            },
+            {
+                label: 'Staff',
+                icon: 'pi pi-fw pi-user',
+                to: '/apps/staff',
+            },
             // {
             //     label: 'Blog',
             //     icon: 'pi pi-fw pi-comment',
@@ -44,26 +54,21 @@ const model = ref([
             //         },
             //     ],
             // },
-            {
-                label: 'Calendar',
-                icon: 'pi pi-fw pi-calendar',
-                to: '/apps/calendar',
-            },
-            {
-                label: 'Chat',
-                icon: 'pi pi-fw pi-comments',
-                to: '/apps/chat',
-            },
+            // {
+            //     label: 'Calendar',
+            //     icon: 'pi pi-fw pi-calendar',
+            //     to: '/apps/calendar',
+            // },
+            // {
+            //     label: 'Chat',
+            //     icon: 'pi pi-fw pi-comments',
+            //     to: '/apps/chat',
+            // },
             // {
             //     label: 'Files',
             //     icon: 'pi pi-fw pi-folder',
             //     to: '/apps/files',
             // },
-            {
-                label: 'Roster',
-                icon: 'pi pi-fw pi-folder',
-                to: '/apps/roster',
-            },
             // {
             //     label: 'Mail',
             //     icon: 'pi pi-fw pi-envelope',
@@ -85,11 +90,11 @@ const model = ref([
             //         },
             //     ],
             // },
-            {
-                label: 'Task List',
-                icon: 'pi pi-fw pi-check-square',
-                to: '/apps/tasklist',
-            },
+            // {
+            //     label: 'Task List',
+            //     icon: 'pi pi-fw pi-check-square',
+            //     to: '/apps/tasklist',
+            // },
         ],
     },
 ]);

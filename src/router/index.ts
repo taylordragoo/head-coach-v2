@@ -77,6 +77,11 @@ const routes = [
                 component: () => import('@/views/apps/TeamRoster.vue'),
             },
             {
+                path: '/apps/staff',
+                name: 'staff',
+                component: () => import('@/views/apps/TeamStaff.vue'),
+            },
+            {
                 path: '/apps/chat',
                 name: 'chat',
                 component: () => import('@/views/apps/chat/Index.vue'),

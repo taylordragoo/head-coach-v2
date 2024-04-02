@@ -86,17 +86,11 @@ const isOutsideClicked = (event) => {
             <div class="layout-topbar-menu-section">
                 <AppTopbar ref="topbarRef"></AppTopbar>
             </div>
-
             <div class="layout-content">
-<!--                <AppBreadcrumb />-->
-
                 <router-view />
             </div>
-            <AppFooter />
         </div>
-<!--        <AppConfig></AppConfig>-->
         <AppSearch />
-<!--        <AppRightMenu></AppRightMenu>-->
         <div class="layout-mask"></div>
     </div>
 </template>

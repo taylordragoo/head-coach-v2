@@ -1,255 +1,219 @@
-<script setup>
+<template>
+    <div class="grid">
+        <div class="col-12 md:col-7 xl:col-12">
+            <div class="card">
+                <div>
+                    <div class="col-12">
+                        <div class="flex flex-wrap gap-4">
+                            <div v-for="(pos, i) in POSITIONS" :key="i" class="flex-1" @click="togglePosition(pos)">
+                                <div :class="['p-3 border-1 surface-border flex align-items-center justify-content-between hover:surface-200 cursor-pointer border-round', { 'selected-position': isPositionSelected(pos) }]">
+                                    <div class="flex items-center text-center">
+                                        <span class="text-900 text-lg text-center items-center font-medium">
+                                            {{ pos }}
+                                        </span>
+                                    </div>
+                                    <span class="text-900 text-lg font-semibold">{{ getPositionCount(pos) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <DataTable v-if="teams[selectedTeam]" sortField="ratings.overall" sortOrder="-1" :value="filteredPlayers" dataKey="id" paginator :rows="10" responsiveLayout="scroll">
+                    <Column field="first_name" header="First" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ data.first_name }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="last_name" header="Last" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ data.last_name }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="ratings.position" header="Position" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ data.ratings.position }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="ratings.overall" header="Overall" default sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ data.ratings.overall }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="ratings.potential" header="Potential" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ data.ratings.potential }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="draft.year" header="Experience" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ 2024 - data.draft.year }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="born.year" header="Age" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ (2024 - data.born.year) }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="draft.year" header="Drafted" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ (data.draft.year != 0 ? data.draft.year : 'Undrafted') }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="college.abbrev" header="College" sortable :headerStyle="{ minWidth: '10rem' }">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center">
+                                <span>{{ data.college.abbrev }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column :style="{ width: '10rem' }">
+                        <template #body>
+                            <div class="text-center">
+                                <Button icon="pi pi-user" class="p-button-text p-button-rounded"></Button>
+                            </div>
+                        </template>
+                    </Column>
+                </DataTable>
+                <div v-else>No team selected or team data not available.</div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
 import { ref, watch } from 'vue';
 import { FileService } from '@/service/FileService';
 import { useStore } from 'vuex';
+import { useLayout } from '@/layout/composables/layout';
 import World from "../../models/World";
 import League from "../../models/League";
 import User from "../../models/User";
 import Team from "../../models/Team";
 import Player from "../../models/Player";
+import {POSITIONS, OFF_POSITIONS, DEF_POSITIONS} from '@/data/constants';
 
-const metrics = ref([]);
-const files = ref([]);
-const folders = ref([]);
-const chartData = ref([]);
-const chartOptions = ref({});
-const chartPlugins = ref({});
-const menuItems = ref([
-    { label: 'View', icon: 'pi pi-search' },
-    { label: 'Refresh', icon: 'pi pi-refresh' },
-]);
-const menuRef = ref(null);
-const fileUploaderRef = ref(null);
-const uploadFiles = ref([]);
-const fileService = new FileService();
-fileService.getFiles().then((data) => (files.value = data));
-fileService.getMetrics().then((data) => (metrics.value = data));
-fileService.getFoldersLarge().then((data) => (folders.value = data));
-
-const documentStyle = getComputedStyle(document.documentElement);
-const textColor = documentStyle.getPropertyValue('--text-color');
-
-chartPlugins.value = [
-    {
-        beforeDraw: function (chart) {
-            let ctx = chart.ctx;
-            let width = chart.width;
-            let height = chart.height;
-            let fontSize = 1.5;
-            let oldFill = ctx.fillStyle;
-
-            ctx.restore();
-            ctx.font = fontSize + 'rem sans-serif';
-            ctx.textBaseline = 'middle';
-
-            let text = 'Free Space';
-            let text2 = 50 + 'GB / ' + 80 + 'GB';
-            let textX = Math.round((width - ctx.measureText(text).width) / 2);
-            let textY = (height + chart.chartArea.top) / 2.25;
-
-            let text2X = Math.round((width - ctx.measureText(text).width) / 2.1);
-            let text2Y = (height + chart.chartArea.top) / 1.75;
-
-            ctx.fillStyle = chart.config.data.datasets[0].backgroundColor[0];
-            ctx.fillText(text, textX, textY);
-            ctx.fillText(text2, text2X, text2Y);
-            ctx.fillStyle = oldFill;
-            ctx.save();
+export default {
+    components: {},
+    data() {
+        return {
+            POSITIONS,
+            OFF_POSITIONS,
+            DEF_POSITIONS,
+            selectedTeam: 0,
+            filtered_positions: [],
+            documentStyle: getComputedStyle(document.documentElement),
+            textColor: '#212121',
+            chartOptions: {
+                animation: {
+                    duration: 0,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '90%',
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#495057',
+                        },
+                    },
+                },
+            }
+        };
+    },
+    methods: {
+        togglePosition(pos) {
+            const index = this.filtered_positions.indexOf(pos);
+            if (index > -1) {
+                this.filtered_positions.splice(index, 1);
+            } else {
+                this.filtered_positions.push(pos);
+            }
+        },
+        getPositionCount(pos) {
+            if (this.user) {
+                return this.user.team?.players.filter(player => player.ratings.position === pos).length;
+            }
+            return 0;
+        },
+        isPositionSelected(pos) {
+            return this.filtered_positions.includes(pos);
         },
     },
-];
-chartData.value = {
-    datasets: [
-        {
-            data: [300, 100],
-            backgroundColor: [documentStyle.getPropertyValue('--primary-600'), documentStyle.getPropertyValue('--primary-100')],
-            hoverBackgroundColor: [documentStyle.getPropertyValue('--primary-700'), documentStyle.getPropertyValue('--primary-200')],
-            borderColor: 'transparent',
-            fill: true,
-        },
-    ],
-};
-
-chartOptions.value = {
-    animation: {
-        duration: 0,
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '90%',
-    plugins: {
-        legend: {
-            labels: {
-                color: textColor,
+    computed: {
+        user: {
+            /* By default get() is used */
+            get() {
+                return User.query().with('team.players.*').first()
             },
+            /* We add a setter */
+            set(value) {
+                this.$store.commit('updateUser', value)
+            }
         },
-    },
-};
-
-const toggleMenuItem = (event, index) => {
-    menuRef.value[index].toggle(event);
-};
-
-const onChooseUploadFiles = () => {
-    fileUploaderRef.value.choose();
-};
-const onSelectedFiles = (event) => {
-    uploadFiles.value = event.files;
-};
-const onRemoveFile = (removeFile) => {
-    uploadFiles.value = uploadFiles.value.filter((file) => file.name !== removeFile.name);
-};
-
-const store = useStore();
-
-const user = ref(User.query().with('team.league.players').first());
-const world = ref(World.query().with('leagues.teams.players.*').first());
-
-watch(user, (newValue) => {
-    store.commit('updateUser', newValue);
-});
-
-watch(world, (newValue) => {
-    store.commit('updateWorld', newValue);
-});
+        world: {
+            /* By default get() is used */
+            get() {
+            return World.query().first()
+            },
+            /* We add a setter */
+            set(value) {
+            this.$store.commit('updateWorld', value)
+            }
+        },
+        teams: {
+            /* By default get() is used */
+            get() {
+                return Team.query().with('players.*').orderBy('name').all()
+            },
+            /* We add a setter */
+            set(value) {
+                this.$store.commit('updateTeams', value)
+            }
+        },
+        players: {
+            /* By default get() is used */
+            get() {
+                return Player.query().with('team').all();
+            },
+            /* We add a setter */
+            set(value) {
+                this.$store.commit('updatePlayers', value)
+            }
+        },
+        filteredPlayers() {
+            if (this.user.team) {
+                if (this.filtered_positions.length === 0) {
+                    return this.user.team.players;
+                } else {
+                    return this.user.team.players.filter(player =>
+                        this.filtered_positions.includes(player.ratings.position)
+                    );
+                }
+            }
+            return [];
+        },
+    }
+}
 
 </script>
-
-<template>
-    <div class="grid">
-        <div v-for="(metric, i) in metrics" :key="i" class="col-12 md:col-6 lg:col-3">
-            <div class="card h-full">
-                <div class="flex align-items-center justify-content-between mb-3">
-                    <span class="text-900 text-xl font-semibold">{{ metric.title }}</span>
-                    <div>
-                        <Button @click="toggleMenuItem($event, i)" :icon="metric.icon" class="p-button-text p-button-sm p-button-rounded"></Button>
-                        <Menu ref="menuRef" popup :model="menuItems"></Menu>
-                    </div>
-                </div>
-                <div>
-                    <div class="border-round" :class="metric.color" :style="{ height: '6px' }">
-                        <div class="h-full border-round" :class="metric.fieldColor" :style="{ width: '34%' }"></div>
-                    </div>
-                    <div class="flex align-item-center justify-content-between">
-                        <span class="text-900 mt-3 text-md font-medium">{{ metric.files }}</span>
-                        <span class="text-900 mt-3 text-md font-medium">{{ metric.fileSize }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 md:col-5 xl:col-3">
-            <div class="card">
-                <div class="text-900 text-xl font-semibold mb-3">Account Storage</div>
-                <div class="flex flex-row justify-content-center" style="height: 200px">
-                    <Chart type="doughnut" :plugins="chartPlugins" id="country-chart" :data="chartData" :options="chartOptions" :style="{ width: '75%' }"></Chart>
-                </div>
-                <div class="mt-5 flex gap-3">
-                    <Button icon="pi pi-search" class="p-button-outlined flex-1" label="Details"></Button>
-                    <Button icon="pi pi-upload" class="flex-1" label="Upgrade"></Button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="text-900 text-xl font-semibold mb-3">Categories</div>
-                <ul class="list-none p-0 m-0">
-                    <li class="p-3 mb-3 flex align-items-center justify-content-between cursor-pointer border-round bg-indigo-50 text-indigo-900">
-                        <div class="flex align-items-center">
-                            <i class="pi pi-image text-2xl mr-3"></i>
-                            <span class="ext-lg font-medium">Images</span>
-                        </div>
-                        <span class="text-lg font-bold">85</span>
-                    </li>
-                    <li class="p-3 mb-3 flex align-items-center justify-content-between cursor-pointer border-round bg-purple-50 text-purple-900">
-                        <div class="flex align-items-center">
-                            <i class="pi pi-file text-2xl mr-3"></i>
-                            <span class="ext-lg font-medium">Documents</span>
-                        </div>
-                        <span class="text-lg font-bold">231</span>
-                    </li>
-                    <li class="p-3 flex align-items-center justify-content-between cursor-pointer border-round bg-teal-50 text-teal-900">
-                        <div class="flex align-items-center">
-                            <i class="pi pi-video text-2xl mr-3"></i>
-                            <span class="ext-lg font-medium">Videos</span>
-                        </div>
-                        <span class="text-lg font-bold">40</span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="card p-0">
-                <Toast key="fu"></Toast>
-                <div class="card">
-                    <FileUpload ref="fileUploaderRef" id="files-fileupload" name="demo[]" url="./upload.php" accept="image/*" customUpload multiple auto class="upload-button-hidden w-full" :maxFileSize="1000000" @select="onSelectedFiles">
-                        <template #content>
-                            <div v-if="uploadFiles.length > 0" class="w-full py-3" :style="{ cursor: 'copy' }">
-                                <div v-for="file in uploadFiles" :key="file.name" class="flex flex-wrap gap-5">
-                                    <div class="remove-file-wrapper h-full relative w-7rem h-7rem border-3 border-transparent border-round hover:bg-primary transition-duration-100 cursor-auto" :style="{ padding: '1px' }">
-                                        <img :src="file.objectURL" alt="{file.name}" class="w-full h-full border-round shadow-2" />
-                                        <Button
-                                            icon="pi pi-times"
-                                            class="remove-button p-button-rounded p-button-primary text-sm absolute justify-content-center align-items-center cursor-pointer"
-                                            :style="{ top: '-10px', right: '-10px', display: 'none' }"
-                                            @click="onRemoveFile(file)"
-                                        ></Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                        <template #empty>
-                            <div v-if="uploadFiles.length < 1" @click="onChooseUploadFiles" class="w-full py-3" :style="{ cursor: 'copy' }">
-                                <div class="h-full flex flex-column justify-content-center align-items-center">
-                                    <i class="pi pi-upload text-900 text-2xl mb-3"></i>
-                                    <span class="font-bold text-900 text-xl mb-3">Upload Files</span>
-                                    <span class="font-medium text-600 text-md text-center">Drop or select files</span>
-                                </div>
-                            </div>
-                        </template>
-                    </FileUpload>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 md:col-7 xl:col-9">
-            <div class="card">
-                <div class="text-900 text-xl font-semibold mb-3">Folders</div>
-                <div class="grid">
-                    <div v-for="(folder, i) in folders" :key="i" class="col-12 md:col-6 xl:col-4">
-                        <div class="p-3 border-1 surface-border flex align-items-center justify-content-between hover:surface-100 cursor-pointer border-round">
-                            <div class="flex align-items-center">
-                                <i class="text-2xl mr-3" :class="folder.icon"></i>
-                                <span class="text-900 text-lg font-medium">{{ folder.name }}</span>
-                            </div>
-                            <span class="text-600 text-lg font-semibold">{{ folder.size }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="text-900 text-xl font-semibold mb-3">Recent Uploads</div>
-                <DataTable :value="files" dataKey="id" paginator :rows="8" responsiveLayout="scroll">
-                    <Column field="name" header="Name" sortable :headerStyle="{ minWidth: '12rem' }">
-                        <template #body="{ data }">
-                            <div class="flex align-items-center">
-                                <i class="text-xl text-primary mr-2" :class="data.icon"></i>
-                                <span>{{ data.name }}</span>
-                            </div>
-                        </template>
-                    </Column>
-                    <Column field="date" header="Date" headerClass="white-space-nowrap" :headerStyle="{ minWidth: '12rem' }"> </Column>
-                    <Column field="fileSize" header="File Size" sortable :headerStyle="{ minWidth: '12rem' }"></Column>
-                    <Column :style="{ width: '10rem' }">
-                        <template #body>
-                            <div class="text-center">
-                                <Button icon="pi pi-times" class="p-button-danger p-button-text p-button-rounded mr-2"></Button>
-                                <Button icon="pi pi-search" class="p-button-text p-button-rounded"></Button>
-                            </div>
-                        </template>
-                    </Column>
-                </DataTable>
-            </div>
-        </div>
-    </div>
-</template>
 
 <style scoped lang="scss">
 ::v-deep(#files-fileupload) {
@@ -283,5 +247,9 @@ watch(world, (newValue) => {
             display: none;
         }
     }
+}
+
+.selected-position {
+    background-color: var(--surface-100);
 }
 </style>

@@ -82,4 +82,13 @@ export default class Player extends Model {
     stats!: Stat[];
     transactions!: Transaction[];
     awards!: Award[];
+
+    get full_name () {
+        return `${this.first_name} ${this.last_name}`
+    }
+
+    get player_exp () {
+        let draft = Draft.query().where('pid', this.pid).first();
+        return draft ? (2024 - draft.year) : 0;
+    }
 }

@@ -486,34 +486,40 @@ export const TEAM_STATS_TABLES = {
 export const POSITIONS = [
     "QB",
     "RB",
-    "FB",
     "WR",
     "TE",
-    "LT",
-    "LG",
-    "C",
-    "RG",
-    "RT",
-    "DT",
-    "LE",
-    "RE",
-    "OLB",
-    "MLB",
+    "OL",
+    "DL",
+    "LB",
     "CB",
-    "FS",
-    "SS",
+    "S",
     "K",
     "P",
-    "KR",
-    "PR",
+];
+
+export const OFF_POSITIONS = [
+    "QB",
+    "RB",
+    "WR",
+    "TE",
+    "OL",
+    "K",
+];
+
+export const DEF_POSITIONS = [
+    "DL",
+    "LB",
+    "CB",
+    "S",
+    "P",
 ];
 
 export const MAX_POSITION_COUNTS = {
-    QB: 4,
+    QB: 5,
     RB: 5,
     FB: 2,
-    WR: 7,
-    TE: 4,
+    WR: 8,
+    TE: 5,
     LT: 3,
     LG: 3,
     C: 3,
@@ -522,13 +528,17 @@ export const MAX_POSITION_COUNTS = {
     DT: 6,
     LE: 4,
     RE: 4,
-    OLB: 6,
+    LOLB: 4,
     MLB: 4,
-    CB: 6,
-    FS: 3,
-    SS: 3,
-    K: 1,
-    P: 1,
+    ROLB: 4,
+    CB: 8,
+    FS: 4,
+    SS: 4,
+    K: 2,
+    P: 2,
+    KR: 2,
+    PR: 2,
+    LS: 2
 };
 
 export const MIN_POSITION_COUNTS = {

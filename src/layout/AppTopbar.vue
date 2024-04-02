@@ -1,11 +1,8 @@
 <template>
     <div class="layout-topbar">
         <div v-if='user != null' class="layout-breadcrumb viewname" style="text-transform: uppercase">
-            <template v-if="$route.meta.breadcrumb">
-                <span>{{ league_phase + " | " + user.full_name + " | " + world.currentDayOfWeek + ' ' + world.date }}</span>
-            </template>
+          <span>{{ league_phase + " | " + user.full_name + " | " + world.currentDayOfWeek + ' ' + world.date }}</span>
         </div>
-        <!-- <div v-else  class="layout-breadcrumb viewname" style="text-transform: uppercase"></div> -->
         <div class="topbar-left">
             <span class="topbar-separator"></span>
         </div>
@@ -159,7 +156,11 @@
       user: {
         /* By default get() is used */
         get() {
-          return User.query().with('team.players.*').first()
+          return User.query().with('team', (query) => {
+            query.with('players', (query) => {
+              query.with('ratings.overalls|potentials');
+            })
+          }).first();
         },
         /* We add a setter */
         set(value) {

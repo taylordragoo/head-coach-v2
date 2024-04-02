@@ -87,11 +87,18 @@ class DatabaseService {
         'stats',
         'injuries',
         'contracts',
+        'staff_contracts',
         'relatives',
         'overalls',
         'potentials',
         'skills',
         'phases',
+        'training_schedules',
+        'activities',
+        'conference',
+        'division',
+        'season',
+        'staff',
     ];
 
     private constructor(name: string = 'default') {
