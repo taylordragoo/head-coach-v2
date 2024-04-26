@@ -483,6 +483,45 @@ export const TEAM_STATS_TABLES = {
     },
 };
 
+export const COACH_ROLES = [
+    "Head Coach",
+    "Offensive Coordinator",
+    "Defensive Coordinator",
+    "Quarterbacks Coach",
+    "Running Backs Coach",
+    "Wide Receivers Coach",
+    "Tight Ends Coach",
+    "Offensive Line Coach",
+    "Defensive Line Coach",
+    "Linebackers Coach",
+    "Secondary Coach",
+    "Strengh & Conditioning Coach",
+    "Special Teams Coach",
+    "Coach"
+];
+
+export const EXECUTIVE_ROLES = [
+    "Owner",
+    "President",
+    "Chief Executive Officer",
+];
+
+export const FRONT_OFFICE_ROLES = [
+    "General Manager",
+    "Assistant General Manager",
+    "Directory of Pro Scouting",
+    "Director of College Scouting",
+    "Scout"
+];
+
+export const SPORTS_MED_ROLES = [
+    "Director of Sports Medicine",
+    "Director of Sports Science",
+    "Doctor",
+    "Trainer",
+    "Sports Scientist"
+]
+
 export const POSITIONS = [
     "QB",
     "RB",
@@ -495,6 +534,35 @@ export const POSITIONS = [
     "S",
     "K",
     "P",
+    "RS"
+];
+
+export const DEPTH_CHART_POSITIONS = [
+    "All",
+    "QB",
+    "RB",
+    "FB",
+    "WR",
+    "TE",
+    "LT",
+    "LG",
+    "C",
+    "RG",
+    "RT",
+    "LE",
+    "RE",
+    "DT",
+    "LOLB",
+    "MLB",
+    "ROLB",
+    "CB",
+    "SS",
+    "FS",
+    "K",
+    "P",
+    "KR",
+    "PR",
+    "LS",
 ];
 
 export const OFF_POSITIONS = [
@@ -565,24 +633,23 @@ export const MIN_POSITION_COUNTS = {
 };
 
 export const RATINGS = [
-    "HGT",
     "STR",
     "SPD",
     "END",
     "THP",
     "THA",
-    "bsc",
-    "elu",
-    "rtr",
-    "hnd",
-    "rbk",
-    "pbk",
-    "pcv",
-    "tck",
-    "prs",
-    "rns",
-    "kpw",
-    "kac",
-    "ppw",
-    "pac",
+    "BSC",
+    "ELU",
+    "RTR",
+    "HND",
+    "RBK",
+    "PBK",
+    "PCV",
+    "TCK",
+    "PRS",
+    "RNS",
+    "KPW",
+    "KAC",
+    "PPW",
+    "PAC",
 ];

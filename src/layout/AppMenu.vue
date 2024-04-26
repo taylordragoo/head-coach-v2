@@ -1,6 +1,7 @@
 <script setup>
 import AppMenuItem from './AppMenuItem.vue';
 import { ref } from 'vue';
+
 const model = ref([
     {
         label: 'Dashboards',
@@ -29,77 +30,20 @@ const model = ref([
                 to: '/apps/roster',
             },
             {
+                label: 'Depth Chart',
+                icon: 'pi pi-fw pi-server',
+                to: '/apps/depth-chart',
+            },
+            {
                 label: 'Staff',
                 icon: 'pi pi-fw pi-user',
                 to: '/apps/staff',
             },
-            // {
-            //     label: 'Blog',
-            //     icon: 'pi pi-fw pi-comment',
-            //     items: [
-            //         {
-            //             label: 'List',
-            //             icon: 'pi pi-fw pi-image',
-            //             to: '/apps/blog/list',
-            //         },
-            //         {
-            //             label: 'Detail',
-            //             icon: 'pi pi-fw pi-list',
-            //             to: '/apps/blog/detail',
-            //         },
-            //         {
-            //             label: 'Edit',
-            //             icon: 'pi pi-fw pi-pencil',
-            //             to: '/apps/blog/edit',
-            //         },
-            //     ],
-            // },
-            // {
-            //     label: 'Calendar',
-            //     icon: 'pi pi-fw pi-calendar',
-            //     to: '/apps/calendar',
-            // },
-            // {
-            //     label: 'Chat',
-            //     icon: 'pi pi-fw pi-comments',
-            //     to: '/apps/chat',
-            // },
-            // {
-            //     label: 'Files',
-            //     icon: 'pi pi-fw pi-folder',
-            //     to: '/apps/files',
-            // },
-            // {
-            //     label: 'Mail',
-            //     icon: 'pi pi-fw pi-envelope',
-            //     items: [
-            //         {
-            //             label: 'Inbox',
-            //             icon: 'pi pi-fw pi-inbox',
-            //             to: '/apps/mail/inbox',
-            //         },
-            //         {
-            //             label: 'Compose',
-            //             icon: 'pi pi-fw pi-pencil',
-            //             to: '/apps/mail/compose',
-            //         },
-            //         {
-            //             label: 'Detail',
-            //             icon: 'pi pi-fw pi-comment',
-            //             to: '/apps/mail/detail/1000',
-            //         },
-            //     ],
-            // },
-            // {
-            //     label: 'Task List',
-            //     icon: 'pi pi-fw pi-check-square',
-            //     to: '/apps/tasklist',
-            // },
         ],
     },
 ]);
 
-const og = ref([
+const original_model = ref([
     {
         label: 'Dashboards',
         icon: 'pi pi-home',
@@ -571,6 +515,7 @@ const og = ref([
         ],
     },
 ]);
+
 </script>
 
 <template>

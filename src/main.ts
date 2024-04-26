@@ -89,6 +89,9 @@ import TreeSelect from 'primevue/treeselect';
 import TreeTable from 'primevue/treetable';
 import TriStateCheckbox from 'primevue/tristatecheckbox';
 import BlockViewer from '@/components/BlockViewer.vue';
+import CustomTabView from '@/components/CustomTabView.vue';
+import CustomTabPanel from '@/components/CustomTabPanel.vue';
+import CustomBaseComponent from '@/components/CustomBaseComponent.vue';
 
 import '@/assets/styles.scss';
 import {StoreController} from "./controllers";
@@ -187,6 +190,9 @@ app.component('TreeSelect', TreeSelect);
 app.component('TreeTable', TreeTable);
 app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('BlockViewer', BlockViewer);
+app.component('CustomTabView', CustomTabView);
+app.component('CustomTabPanel', CustomTabPanel);
+app.component('CustomBaseComponent', CustomBaseComponent);
 
 const storeController = StoreController.getInstance();
 const store = storeController.getStore()

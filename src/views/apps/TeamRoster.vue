@@ -20,18 +20,11 @@
                 </div>
             </div>
             <div class="card">
-                <DataTable v-if="teams[selectedTeam]" sortField="ratings.overall" sortOrder="-1" :value="filteredPlayers" dataKey="id" paginator :rows="10" responsiveLayout="scroll">
-                    <Column field="first_name" header="First" sortable :headerStyle="{ minWidth: '10rem' }">
+                <DataTable v-if="teams[selectedTeam]" sortField="ratings.overall" :sortOrder="-1" :value="filteredPlayers" dataKey="id" paginator :rows="10" responsiveLayout="scroll">
+                    <Column field="full_name" header="Name" sortable :headerStyle="{ minWidth: '10rem' }">
                         <template #body="{ data }">
                             <div class="flex align-items-center">
-                                <span>{{ data.first_name }}</span>
-                            </div>
-                        </template>
-                    </Column>
-                    <Column field="last_name" header="Last" sortable :headerStyle="{ minWidth: '10rem' }">
-                        <template #body="{ data }">
-                            <div class="flex align-items-center">
-                                <span>{{ data.last_name }}</span>
+                                <span>{{ data.full_name }}</span>
                             </div>
                         </template>
                     </Column>

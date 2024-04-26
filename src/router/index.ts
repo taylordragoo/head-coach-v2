@@ -77,6 +77,11 @@ const routes = [
                 component: () => import('@/views/apps/TeamRoster.vue'),
             },
             {
+                path: '/apps/depth-chart',
+                name: 'depth-chart',
+                component: () => import('@/views/apps/DepthChart.vue'),
+            },
+            {
                 path: '/apps/staff',
                 name: 'staff',
                 component: () => import('@/views/apps/TeamStaff.vue'),

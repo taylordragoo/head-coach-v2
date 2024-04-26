@@ -4109,8 +4109,7 @@
   box-shadow: inset 0 0 0 1px #b1dafb;
 }
 .p-tabview .p-tabview-panels {
-  background: #1e1e1e;
-  padding: 1rem;
+  padding: 0rem;
   border: 0 none;
   color: rgba(255, 255, 255, 0.87);
   border-bottom-right-radius: 4px;
