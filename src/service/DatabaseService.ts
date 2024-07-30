@@ -99,6 +99,7 @@ class DatabaseService {
         'division',
         'season',
         'staff',
+        'depthChart'
     ];
 
     private constructor(name: string = 'default') {
@@ -247,16 +248,25 @@ class DatabaseService {
     public async handleOpenExistingDatabase(name: string) {
         if (await this.handleDbExistence(name)) {
             const db = new Dexie(name);
-            const schema = {};
-            Object.keys(this.modelConfig).forEach(tableName => {
-                schema[tableName] = 'id';
-            });
+            let version = 1;
     
-            db.version(1).stores(schema);
+            for (const tableName of this.tableNames) {
+                const schema = {};
+                schema[tableName] = 'id';
+    
+                // Check if table exists
+                if (!db.tables.some(table => table.name === tableName)) {
+                    // If not, increment the version number and add the new table
+                    db.version(version++).stores(schema);
+                }
+            }
     
             try {
                 if (!db.isOpen()) {
+                    console.log("Opening DB: " + name);
                     await db.open();
+                } else {
+                    console.log("DB already open: " + name);
                 }
                 return db;
             } catch (error) {

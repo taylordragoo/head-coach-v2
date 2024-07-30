@@ -202,7 +202,8 @@ export default {
             leagueController: null,
             teamController: null,
             playerController: null,
-            careerController: null
+            careerController: null,
+            databaseController: null
         }
     },
     created() {
@@ -210,12 +211,11 @@ export default {
         this.careerController = new CareerController()
         this.worldController = new WorldController()
         this.databaseController = DatabaseController.getInstance()
-        this.getDefaultTeamsLeagues() // Check for existing saves
+        this.getDefaultTeamsLeagues();
         this.nodeService = new NodeService();
     },
     mounted() {
         this.$store.dispatch('resetState')
-      // this.nodeService.getTreeTableNodes().then((data) => (this.treeTableValue = data));
     },
     watch: {
         value1() {
