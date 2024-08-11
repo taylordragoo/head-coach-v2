@@ -22,8 +22,7 @@ export default class TeamController {
 
     create() {
         this.teamService.handleCreateNewTeams(team_data.teams)
-        this.playerController.create();
-
+        // this.playerController.create();
     }
 
     read() {

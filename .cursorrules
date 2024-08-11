@@ -1,1 +1,2 @@
-Creating a Football Manager type game but with American football using Vite/Vue3/Vuex/Tauri/Typescript/IndexedDb via Dexie.
+Creating a Football Manager type game but with American football using Vite/Vue3/Vuex/Tauri/Typescript/IndexedDb via Dexie. 
+Currently trying to configure a system to generate players and their attributes in a way that makes sense across the whole league similar to OOTP or Football Manager.

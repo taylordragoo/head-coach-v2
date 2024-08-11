@@ -31,7 +31,7 @@
                     <Column field="ratings.position" header="Position" sortable :headerStyle="{ minWidth: '10rem' }">
                         <template #body="{ data }">
                             <div class="flex align-items-center">
-                                <span>{{ data.ratings.position }}</span>
+                                <span>{{ data.position }}</span>
                             </div>
                         </template>
                     </Column>
@@ -142,7 +142,7 @@ export default {
         },
         getPositionCount(pos) {
             if (this.user) {
-                return this.user.team?.players.filter(player => player.ratings.position === pos).length;
+                return this.user.team?.players.filter(player => player.position === pos).length;
             }
             return 0;
         },
@@ -197,7 +197,7 @@ export default {
                     return this.user.team.players;
                 } else {
                     return this.user.team.players.filter(player =>
-                        this.filtered_positions.includes(player.ratings.position)
+                        this.filtered_positions.includes(player.position)
                     );
                 }
             }

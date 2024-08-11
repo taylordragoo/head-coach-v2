@@ -35,6 +35,10 @@ export default class Player extends Model {
             value_no_pot: this.attr(0),
             value_fuzz: this.attr(0),
             value_no_pot_fuzz: this.attr(0),
+            position: this.attr(''),
+            position_archetype: this.attr(''),
+            mental_archetype: this.attr(''),
+            base_rating: this.attr(0),
 
             // Relationships
             born: this.hasOne(Born, 'pid'),
@@ -69,6 +73,11 @@ export default class Player extends Model {
     value_no_pot!: number;
     value_fuzz!: number;
     value_no_pot_fuzz!: number;
+    position!: string;
+    position_archetype!: string;
+    mental_archetype!: string;
+    
+    base_rating!: number;
 
     born!: Born;
     college!: College;

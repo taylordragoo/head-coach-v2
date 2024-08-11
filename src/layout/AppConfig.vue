@@ -6,10 +6,13 @@
         <div class="px-2">
             <h5>Helper Functions</h5>
             <div class="flex w-full justify-content-between align-items-center mb-2">
-                <Button type="button" severity="danger" class="w-full items-center" @click="setDepthChart()">Set Depth Chart</Button>
+                <Button type="button" severity="danger" class="inline-flex w-full text-center" @click="setDepthChart()">Set Depth Chart</Button>
             </div>
-            <div class="flex w-full justify-content-between align-items-center">
-                <Button type="button" severity="danger" class="w-full items-center" @click="clearDepthChart()">Clear Depth Chart</Button>
+            <div class="flex w-full justify-content-between align-items-center mb-2">
+                <Button type="button" severity="danger" class="w-full text-center" @click="clearDepthChart()">Clear Depth Chart</Button>
+            </div>
+            <div class="flex w-full justify-content-between align-items-center mb-2">
+                <Button type="button" severity="danger" class="w-full items-center" @click="generateNewData()">Generate New Data</Button>
             </div>
             <hr />
         </div>
@@ -21,12 +24,13 @@ import Sidebar from 'primevue/sidebar';
 import { usePrimeVue } from 'primevue/config';
 import { useLayout } from '@/layout/composables/layout';
 import DatabaseController from "../controllers/DatabaseController";
+import TeamController from "../controllers/TeamController";
 import World from "../models/World";
 import League from "../models/League";
 import User from "../models/User";
 import Team from "../models/Team";
 import Player from "../models/Player";
-import { DEPTH_CHART_POSITIONS, POSITIONS, OFF_POSITIONS, DEF_POSITIONS } from '@/data/constants';
+import { DEPTH_CHART_POSITIONS } from '@/data/constants';
 
 export default {
     data() {
@@ -79,8 +83,11 @@ export default {
         onConfigSidebarToggle() {
             this.configSidebarVisible = !this.configSidebarVisible;
         },
-        generatePosition() {
-            
+        async generateNewData() {
+            let db = await this.databaseController.openExistingDatabase("default");
+            db.teams.clear();
+            db.players.clear();
+            this.teamController.create();
         }
     },
     computed: {
@@ -111,7 +118,15 @@ export default {
         this.layoutState = layout.layoutState;
         this.setScale = layout.setScale;
         this.databaseController = DatabaseController.getInstance()
+        this.teamController = TeamController.getInstance()
     },
 }
 
 </script>
+
+<style scoped>
+.p-button {
+    display: inline-flex;
+    flex-direction: column;
+}
+</style>

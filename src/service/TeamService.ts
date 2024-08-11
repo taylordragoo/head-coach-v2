@@ -6,6 +6,11 @@ import Overalls from '@/models/Overalls';
 import Potentials from '@/models/Potentials';
 import faker from 'faker';
 import ITeam from '@/interfaces/ITeam';
+import utils from '@/utils/utilities';
+import PlayerService from '@/service/PlayerService';
+import team_data from '@/data/teams.json';
+import old_players from '@/data/players.json';
+import { MIN_POSITION_COUNTS, MAX_POSITION_COUNTS, POSITIONS, POSITION_ARCHETYPES, TECHNICAL_ARCHETYPES, MENTAL_ARCHETYPES } from '@/data/constants';
 
 export default class TeamService {
     private static instance: TeamService;
@@ -26,18 +31,66 @@ export default class TeamService {
             return this.handleGenerateTeam(team);
         })
 
-        console.log(_teams);
+        // Temporarily disable while testing
+        // Team.insert({
+        //     data: _teams
+        // })
 
-        Team.insert({
-            data: _teams
-        })
+        this.debugGeneratedPlayers(_teams);
     }
 
     handleGenerateTeam(data: any) {
+        let ps = PlayerService.getInstance();
+        let agingYears, draftYear, n, players, profile, profiles;
         const staff = this.generateStaffForTeam(data.tid + 1);
-        let profiles = ["QB", "WR", "RB", "TE", "OT", "OG", "C", "DE", "DT", "OLB", "MLB", "S", "CB", "Kicker", ""];
-        let baseRatings = [37, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 26, 26, 26, 37, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 26, 26, 26, 37, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 26, 26, 26, 37, 37, 36, 35, 34, 33, 32, 31, 30, 29, 29];
-        let pots = [75, 85, 85, 75, 70, 90, 70, 90, 75, 80, 90, 85, 75, 85, 75, 85, 70, 80, 90, 90, 90, 70, 75, 80, 80, 70, 85, 85, 75, 75, 75, 85, 90, 80, 70, 80, 75, 70, 70, 80, 85, 75, 75, 75, 85, 85, 90, 80, 70, 80, 75, 70, 70];
+        players = [];
+
+        // Initialize currentPositionCounts
+        let currentPositionCounts = {};
+        for (let position of POSITIONS) {
+            currentPositionCounts[position] = 0;
+        }
+        
+        for(n = 0; n < 90; n++) {
+            agingYears = utils.randInt(0, 10);
+            draftYear = 2024 - 1 - agingYears;
+            let position = this.getPosition(currentPositionCounts);
+
+            let adj2 = 0;
+            if(agingYears > 5) {
+                adj2 += 10;
+            }
+            if(agingYears > 8) {
+                adj2 += 1;
+            }
+            if(agingYears > 12) {
+                adj2 += 1;
+            }
+
+            let player = ps.handleGeneratePlayer({
+                team_id: data.tid,
+                age: (2024 - draftYear) + 21,
+                draftYear: draftYear,
+                pos: position
+            });
+
+            player.position = player.ratings.position;
+            player.position_archetype = player.ratings.position_archetype;
+            player.mental_archetype = player.ratings.mental_archetype;
+
+            // Increment the count for the player's position
+            currentPositionCounts[player.position]++;
+
+            players.push(player);
+            
+        }
+
+        // console.log(players);
+
+        // Temporarily disable while testing
+        // Player.insert({
+        //     data: players
+        // })
 
         return {
             id: data.tid + 1,
@@ -93,8 +146,29 @@ export default class TeamService {
             scout: [staff.scout],
             sports_medicine_director: staff.sports_medicine_director,
             doctor: [staff.doctor],
-            trainer: [staff.trainer]
+            trainer: [staff.trainer],
+            players: players
         }
+    }
+
+    getPosition(currentPositionCounts: any) {
+        // Get positions that haven't reached their minimum count
+        let underMinPositions = POSITIONS.filter(position => currentPositionCounts[position] < MIN_POSITION_COUNTS[position]);
+
+        // If all positions have reached their minimum count, get positions that haven't reached their maximum count
+        if (underMinPositions.length === 0) {
+            underMinPositions = POSITIONS.filter(position => currentPositionCounts[position] < MAX_POSITION_COUNTS[position]);
+        }
+
+        // If all positions have reached their maximum count, throw an error
+        if (underMinPositions.length === 0) {
+            throw new Error("All positions have reached their maximum count!");
+        }
+
+        // Select a random position from the underMinPositions array
+        const selectedPosition = underMinPositions[Math.floor(Math.random() * underMinPositions.length)];
+
+        return selectedPosition;
     }
 
     generateStaffForTeam(teamId: number) {
@@ -655,5 +729,52 @@ export default class TeamService {
         const averagePlayerRating = totalPlayerRating / team.players.length;
         
         return averagePlayerRating;
+    }
+
+    debugGeneratedPlayers(teams: Team[]) {
+        let allPlayers = teams.flatMap(team => team.players);
+        let qbs: Player[] = allPlayers.filter(p => p.ratings.position === 'QB');
+        qbs = qbs.sort((a, b) => b.ratings.throw_power - a.ratings.throw_power);
+
+        let qb_ratings: Ratings[] = qbs.map(player => ({
+            overall: Math.round((player.ratings.throw_power + player.ratings.throw_accuracy_deep + player.ratings.throw_accuracy_mid + player.ratings.throw_accuracy_short) / 4),
+            throw_power: player.ratings.throw_power,
+            throw_accuracy_deep: player.ratings.throw_accuracy_deep,
+            throw_accuracy_mid: player.ratings.throw_accuracy_mid,
+            throw_accuracy_short: player.ratings.throw_accuracy_short
+        }));
+
+        qb_ratings = qb_ratings.sort((a, b) => b.overall - a.overall);
+
+        // console.log("Deep-Mid: " + qb_ratings.filter(p => (p.throw_accuracy_mid - p.throw_accuracy_deep) > 20).length);
+        // console.log("Mid-Short: " + qb_ratings.filter(p => p.throw_accuracy_mid == p.throw_accuracy_short).length);
+        // console.log("Deep-Short: " + qb_ratings.filter(p => p.throw_accuracy_deep == p.throw_accuracy_short).length);
+        // console.log("All-Three: " + qb_ratings.filter(p => p.throw_accuracy_mid == p.throw_accuracy_short && p.throw_accuracy_short == p.throw_accuracy_deep).length);
+
+        // console.log(allPlayers);
+
+        // console.log(old_players.players.flatMap(p => p.ratings).filter(r => r.pos === 'QB').map(t => ({
+        //     average: Math.round((t.thp + t.tha + t.thv) / 3),
+        //     thp: t.thp,
+        //     tha: t.tha,
+        //     thv: t.thv
+        // })).sort((a, b) => b.average - a.average));
+
+        teams.forEach((team, index) => {
+            let positionCounts = {};
+            let totalPlayers = 0; // Initialize total players count
+            for (let position of POSITIONS) {
+                positionCounts[position] = { count: 0, players: [] };
+            }
+        
+            team.players.forEach(player => {
+                positionCounts[player.position].count++;
+                positionCounts[player.position].players.push(player);
+                totalPlayers++; // Increment total players count
+            });
+        
+            console.log(`Team ${index + 1} position counts:`, positionCounts);
+            console.log(`Team ${index + 1} total players:`, totalPlayers); // Log total players count
+        });
     }
 }
