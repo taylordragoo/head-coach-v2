@@ -36,8 +36,8 @@ export default class WorldService {
             }
         });
 
-        this.leagueController.createDefaultLeagues();
-
-        return;
+        let message = this.leagueController.createDefaultLeagues();
+        console.log(message);
+        return message;
     }
 }

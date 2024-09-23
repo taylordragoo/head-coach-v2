@@ -23,7 +23,7 @@ export default class LeagueService {
         return LeagueService.instance;
     }
 
-    handleCreateDefaultLeagues()
+    async handleCreateDefaultLeagues()
     {
         League.insert({
             data: {
@@ -38,9 +38,8 @@ export default class LeagueService {
             },
         })
 
-        this.teamService.handleCreateNewTeams(team_data.teams)
-
-        return "Default leagues created"
+        await this.teamService.handleCreateNewTeams(team_data.teams);
+        return "Default league and teams created";
     }
 
     generateSchedule(leagueId) {

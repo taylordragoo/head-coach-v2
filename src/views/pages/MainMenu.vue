@@ -13,7 +13,7 @@
                         <Button type="button" @click="openNew" label="New" style="width:20rem" class="mb-2"/>
                     </div>
                     <div class='row'>
-                        <Button type="button" label="Editor" style="width:20rem" class="mb-2"/>
+                        <Button type="button" @click="openEditor" label="Editor" style="width:20rem" class="mb-2"/>
                     </div>
                     <div class='row'>
                         <Button type="button" label="Settings" style="width:20rem" class="mb-2"/>
@@ -103,9 +103,9 @@
         <div class="row">
             <div class="col-md-2">
             </div>
-            <div class="col-md-1" v-for='save in this.databases'>
+            <div class="col-md-1" v-for='(save, index) in this.existing_db_names' v-bind:key="index">
                 <div class="p-fluid">
-                    <h5>{{ save }}</h5>
+                    <h5>{{ save.formatted }}</h5>
                     <div class="field grid">
                         <label class="col-12 mb-2 md:col-2 md:mb-0">Week</label>
                         <div class="col-12 md:col-10">
@@ -120,10 +120,10 @@
                     </div>
                     <div class="flex w-full mt-2 mb-2 justify-between">
                         <div class="flex items-center w-full px-2">
-                            <Button type="button" to='/dashboard' @click='loadSelectedCareer(save)' label="Continue Save" class="mb-2 p-button-primary w-full" />
+                            <Button type="button" to='/dashboard' @click='loadSelectedCareer(save.original)' label="Continue Save" class="mb-2 p-button-primary w-full" />
                         </div>
                         <div class="flex items-center w-full px-2">
-                            <Button type="button" to='/dashboard' @click='deleteSelectedCareer(save)' label="Delete" class="mb-2 p-button-danger w-full" />
+                            <Button type="button" to='/dashboard' @click='deleteSelectedCareer(save.original)' label="Delete" class="mb-2 p-button-danger w-full" />
                         </div>
                     </div>
                 </div>
@@ -240,11 +240,11 @@ export default {
             const obj = this
             this.databases = await this.databaseController.getAllDatabases();
             console.log(this.databases);
-            this.databases = this.databases.filter(db => db !== 'default' && db !== 'localforage' && db !== 'firebaseLocalStorageDb');
-            obj.existing_db_names = obj.databases
+            this.databases = this.databases.filter(db => db.startsWith('fbgm_'));
+            obj.existing_db_names = obj.databases.map(db => ({ formatted: db.replace('fbgm_', '').replace('_', ' '), original: db }));
         },
         assignTeamsToLeagues(leagues, teams, players) {
-        // This will hold our transformed data
+            // This will hold our transformed data
             let leagueTree = [];
 
             for (let league of leagues) {
@@ -338,6 +338,9 @@ export default {
             this.submitted = false;
             this.continueDialog = true;
         },
+        openEditor() {
+            this.$router.push('/editor')
+        },
         hideDialog() {
             console.log("Hide Dialog")
             this.coachDialog = false;
@@ -346,36 +349,36 @@ export default {
             this.submitted = false;
 
             if(this.loading) {
-            console.log("Loading")
-            this.$router.push('/home')
-            this.loading = false
+                console.log("Loading")
+                this.$router.push('/home')
+                this.loading = false
             }
 
             if(this.creating) {
-            console.log("Creating")
-            this.$router.push('/home')
-            this.creating = false
+                console.log("Creating")
+                this.$router.push('/home')
+                this.creating = false
             }
 
             if(this.deleting) {
-            console.log("Deleting")
-            this.$router.push('/')
-            this.deleting = false
+                console.log("Deleting")
+                this.$router.push('/')
+                this.deleting = false
             }
         },
         async startProgressAndLongRunningFunction() {
-                // Start the progress bar
-                this.restartTimer();
+            // Start the progress bar
+            this.restartTimer();
 
-                // Start the long-running function
-                const longRunningFunctionPromise = this.longRunningFunction();
+            // Start the long-running function
+            const longRunningFunctionPromise = this.longRunningFunction();
 
-                // Wait for the long-running function to complete
-                await longRunningFunctionPromise;
+            // Wait for the long-running function to complete
+            await longRunningFunctionPromise;
 
-                // Stop the progress bar
-                // this.endProgress();
-            },
+            // Stop the progress bar
+            // this.endProgress();
+        },
         restartTimer() {
             clearInterval(this.interval);
             this.value1 = 0;

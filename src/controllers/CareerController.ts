@@ -17,17 +17,17 @@ class CareerController {
         return CareerController.instance;
     }
 
-    public createDefaultData: any = () => {
-        this.careerService.handleCreateDefaultWorld();
+    public async createDefaultData() {
+        await this.careerService.handleCreateDefaultWorld();
         return this.careerService.handleGetDefaultData();
     }
 
-    public loadSelectedCareer: any = (name: string) => {
+    public async loadSelectedCareer(name: string) {
         return this.careerService.handleLoadSelectedCareer(name);
     }
 
-    public saveCareer: any = () => {
-        this.careerService.handleSaveCareer();
+    public asyncsaveCareer: any = async () => {
+        await this.careerService.handleSaveCareer();
     }
 
     public async continueCareer(): Promise<any> {

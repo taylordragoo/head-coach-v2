@@ -1,4 +1,4 @@
-import Player from '@/models/Player';
+import IPlayer from '@/interfaces/Player';
 import Ratings from '@/models/Ratings';
 import IRating from '@/interfaces/IRating';
 import Overalls from '@/models/Overalls';
@@ -36,21 +36,12 @@ export default class PlayerService {
         return PlayerService.instance;
     }
 
-    handleCreatePlayers() {
-        const _players = players.players.map(player => {
-            return this.handleGeneratePlayer(player);
-        })
-
-        // console.log(_players);
-
-        Player.insert({
-            data: _players
-        })
-    }
-
     handleGeneratePlayer(p: any) {
-        let player = new Player;
+        let player: IPlayer = {}
         player.team_id = p.team_id;
+        let name = this.generatePlayerName();
+        player.first_name = name.first_name;
+        player.last_name = name.last_name;
         player.ratings = this.generateRatings(p);
 
         return player;
@@ -314,5 +305,14 @@ export default class PlayerService {
         }
 
         return rawRatings;
+    }
+
+    generatePlayerName() {
+        let names = {
+            first_name: faker.name.firstName('male'),
+            last_name: faker.name.lastName('male'),
+        }
+
+        return names;
     }
 }

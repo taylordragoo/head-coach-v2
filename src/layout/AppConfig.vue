@@ -85,9 +85,9 @@ export default {
         },
         async generateNewData() {
             let db = await this.databaseController.openExistingDatabase("default");
-            db.teams.clear();
-            db.players.clear();
-            this.teamController.create();
+            // db.teams.clear();
+            // db.players.clear();
+            await this.teamController.create();
         }
     },
     computed: {
@@ -109,6 +109,16 @@ export default {
             },
             set(value) {
                 this.$store.commit('updateWorld', value)
+            }
+        },
+        teams: {
+            /* By default get() is used */
+            get() {
+                return Team.query().with('players.*').orderBy('name').all()
+            },
+            /* We add a setter */
+            set(value) {
+                this.$store.commit('updateTeams', value)
             }
         }
     },

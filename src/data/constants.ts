@@ -1,3 +1,102 @@
+import User from '@/models/User';
+import World from '@/models/World';
+import League from '@/models/League';
+import Team from '@/models/Team';
+import Player from '@/models/Player';
+import Match from "@/models/Match";
+import TrainingSchedule from "@/models/TrainingSchedule";
+import Activity from "@/models/Activity";
+import Born from "@/models/Born";
+import College from "@/models/College";
+import Conference from "@/models/Conference";
+import DepthChart from "@/models/DepthChart";
+import Division from "@/models/Division";
+import Contract from "@/models/Contract";
+import Draft from "@/models/Draft";
+import Ratings from "@/models/Ratings";
+import Health from "@/models/Health";
+import Injury from "@/models/Injury";
+import Relative from "@/models/Relative";
+import Salary from "@/models/Salary";
+import Stat from "@/models/Stat";
+import Transaction from "@/models/Transaction";
+import Award from "@/models/Award";
+import Overalls from "@/models/Overalls";
+import Potentials from "@/models/Potentials";
+import Skill from "@/models/Skill";
+import Phase from "@/models/Phase";
+import Season from "@/models/Season";
+import Staff from "@/models/Staff";
+import StaffContract from "@/models/StaffContract";
+
+export function getModelConfig() {
+    return {
+        user: User,
+        players: Player,
+        teams: Team,
+        matches: Match,
+        awards: Award,
+        transactions: Transaction,
+        draft: Draft,
+        health: Health,
+        born: Born,
+        ratings: Ratings,
+        college: College,
+        salaries: Salary,
+        stats: Stat,
+        injuries: Injury,
+        contracts: Contract,
+        staff_contracts: StaffContract,
+        relatives: Relative,
+        overalls: Overalls,
+        potentials: Potentials,
+        skills: Skill,
+        phases: Phase,
+        training_schedules: TrainingSchedule,
+        activities: Activity,
+        conference: Conference,
+        division: Division,
+        season: Season,
+        staff: Staff,
+        leagues: League,
+        world: World,
+        depthChart: DepthChart
+    }
+}
+
+export const tableNames: string[] = [
+    'user',
+    'players',
+    'teams',
+    'matches',
+    'awards',
+    'transactions',
+    'draft',
+    'health',
+    'born',
+    'ratings',
+    'college',
+    'salaries',
+    'stats',
+    'injuries',
+    'contracts',
+    'staff_contracts',
+    'relatives',
+    'overalls',
+    'potentials',
+    'skills',
+    'phases',
+    'training_schedules',
+    'activities',
+    'conference',
+    'division',
+    'season',
+    'staff',
+    'world',
+    'leagues',
+    'depthChart'
+];
+
 export const DIFFICULTY = {
     Easy: -0.25,
     Normal: 0,
@@ -266,32 +365,31 @@ export const MIN_POSITION_COUNTS = {
 };
 
 export const RATINGS = [
-    "STR",
-    "SPD",
-    "STA",
-    "AWR",
-    "THP",
-    "TAS",
-    "TAM",
-    "TAD",
-    "PAC",
-    "AGI",
-    "ACC",
-    "RTR",
-    "REL",
-    "CAR",
-    "CTH",
-    "RBK",
-    "PBK",
-    "PCV",
-    "MCV",
-    "TCK",
-    "PRS",
-    "RNS",
-    "KPW",
-    "KAC",
-    "PPW",
-    "PAC",
+    "speed",
+    "acceleration",
+    "agility",
+    "strength",
+    "vertical",
+    "stamina",
+    "carrying",
+    "catching",
+    "route_running",
+    "throw_power",
+    "throw_accuracy_deep",
+    "throw_accuracy_mid",
+    "throw_accuracy_short",
+    "throw_on_the_run",
+    "play_action",
+    "pass_blocking",
+    "run_blocking",
+    "shed_block",
+    "tackle",
+    "man_coverage",
+    "zone_coverage",
+    "punt_accuracy",
+    "punt_power",
+    "kick_accuracy",
+    "kick_power",
 ];
 
 export const POSITION_ARCHETYPES = {
@@ -363,10 +461,10 @@ export const POSITION_ARCHETYPES = {
         "physical"
     ],
     "K": [
-        "none"
+        "physical"
     ],
     "P": [
-        "none"
+        "physical"
     ]
 }
 

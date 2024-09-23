@@ -17,6 +17,7 @@ export default class Team extends Model {
             cid: this.attr(null),
             name: this.attr(''),
             img_url: this.attr(''),
+            region: this.attr(''),
             abbreviation: this.attr(''),
             country: this.attr(''),
             population: this.attr(0),
@@ -90,6 +91,7 @@ export default class Team extends Model {
     cid!: number
     name!: string | null
     img_url!: string | null
+    region!: string | null
     abbreviation!: string | null
     country!: string | null
     population!: number | null

@@ -13,6 +13,7 @@ import Activity from "@/models/Activity";
 import Born from "@/models/Born";
 import College from "@/models/College";
 import Conference from "@/models/Conference";
+import DepthChart from "@/models/DepthChart";
 import Division from "@/models/Division";
 import Contract from "@/models/Contract";
 import Draft from "@/models/Draft";
@@ -31,75 +32,12 @@ import Phase from "@/models/Phase";
 import Season from "@/models/Season";
 import Staff from "@/models/Staff";
 import StaffContract from "@/models/StaffContract";
-import { DEFAULT_SCHEDULE, PHASE } from "@/data/constants";
+import { DEFAULT_SCHEDULE, PHASE, getModelConfig, tableNames } from "@/data/constants";
 
 class CareerService {
     private static instance: CareerService;
     private teamService = new TeamService();
-
-    public modelConfig: any = {
-        user: User,
-        players: Player,
-        teams: Team,
-        matches: Match,
-        awards: Award,
-        transactions: Transaction,
-        draft: Draft,
-        health: Health,
-        born: Born,
-        ratings: Ratings,
-        college: College,
-        salaries: Salary,
-        stats: Stat,
-        injuries: Injury,
-        contracts: Contract,
-        staff_contracts: StaffContract,
-        relatives: Relative,
-        overalls: Overalls,
-        potentials: Potentials,
-        skills: Skill,
-        phases: Phase,
-        training_schedules: TrainingSchedule,
-        activities: Activity,
-        conference: Conference,
-        division: Division,
-        season: Season,
-        staff: Staff,
-        leagues: League,
-        world: World,
-    }
-
-    public tableNames: string[] = [
-        'user',
-        'world',
-        'players',
-        'teams',
-        'leagues',
-        'matches',
-        'awards',
-        'transactions',
-        'draft',
-        'health',
-        'born',
-        'ratings',
-        'college',
-        'salaries',
-        'stats',
-        'injuries',
-        'contracts',
-        'staff_contracts',
-        'relatives',
-        'overalls',
-        'potentials',
-        'skills',
-        'phases',
-        'training_schedules',
-        'activities',
-        'conference',
-        'division',
-        'season',
-        'staff',
-    ];
+    public modelConfig = getModelConfig();
 
     private constructor() {}
 
@@ -113,7 +51,7 @@ class CareerService {
 
     public async handleCareerData(request: any, db: Dexie): Promise<any> {
         try {
-            for (const tableName of this.tableNames) {
+            for (const tableName of tableNames) {
                 const table = db.table(tableName);
                 const data = request[tableName];
             }
@@ -171,6 +109,7 @@ class CareerService {
         try {
             for (const tableName of Object.keys(this.modelConfig)) {
                 if (request[tableName] && request[tableName].length > 0) {
+                    console.log(`Populate DB: ${tableName}`);
                     await this.modelConfig[tableName].insert({ data: request[tableName] });
                 }
             }

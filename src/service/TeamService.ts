@@ -25,21 +25,19 @@ export default class TeamService {
         return TeamService.instance;
     }
 
-    handleCreateNewTeams(teams: ITeam[])
+    async handleCreateNewTeams(teams: ITeam[])
     {
-        const _teams = teams.map(team => {
-            return this.handleGenerateTeam(team);
+        const _teams = await Promise.all(teams.map(team => this.handleGenerateTeam(team)));
+
+        await Team.insert({
+            data: _teams
         })
-
-        // Temporarily disable while testing
-        // Team.insert({
-        //     data: _teams
-        // })
-
-        this.debugGeneratedPlayers(_teams);
+        
+        return "Teams created"
     }
 
-    handleGenerateTeam(data: any) {
+    async handleGenerateTeam(data: any) {
+        console.log(data);
         let ps = PlayerService.getInstance();
         let agingYears, draftYear, n, players, profile, profiles;
         const staff = this.generateStaffForTeam(data.tid + 1);
@@ -68,7 +66,7 @@ export default class TeamService {
             }
 
             let player = ps.handleGeneratePlayer({
-                team_id: data.tid,
+                team_id: data.tid + 1,
                 age: (2024 - draftYear) + 21,
                 draftYear: draftYear,
                 pos: position
@@ -85,12 +83,7 @@ export default class TeamService {
             
         }
 
-        // console.log(players);
-
-        // Temporarily disable while testing
-        // Player.insert({
-        //     data: players
-        // })
+        console.log(players);
 
         return {
             id: data.tid + 1,
@@ -99,6 +92,7 @@ export default class TeamService {
             cid: data.cid,
             did: data.did,
             name: data.name,
+            region: data.region,
             abbreviation: data.abbrev,
             img_url: data.img_url,
             country: 'USA',
@@ -140,6 +134,7 @@ export default class TeamService {
             coach: [staff.coach],
             owner: staff.owner,
             chief_executive_officer: staff.chief_executive_officer,
+            president: staff.president,
             general_manager: staff.general_manager,
             director_pro_scouting: staff.director_pro_scouting,
             director_college_scouting: staff.director_college_scouting,

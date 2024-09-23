@@ -219,7 +219,6 @@ const routes = [
                 },
                 component: () => import('@/views/uikit/Panels.vue'),
             },
-
             {
                 path: '/uikit/overlay',
                 name: 'overlay',
@@ -463,11 +462,15 @@ const routes = [
         component: () => import('@/views/pages/Landing.vue'),
     },
     {
+        path: '/editor',
+        name: 'editor',
+        component: () => import('@/views/apps/DatabaseEditor.vue')
+    },
+    {
         path: '/pages/notfound',
         name: 'notfound',
         component: () => import('@/views/pages/NotFound.vue'),
     },
-
     {
         path: '/auth/login',
         name: 'login',
